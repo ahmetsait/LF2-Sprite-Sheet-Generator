@@ -22,7 +22,7 @@ namespace LF2.Sprite_Sheet_Generator
 				this.Width = desktop.Width;
 			if (this.Height > desktop.Height)
 				this.Height = desktop.Height;
-			templateBox.ScaleFit();
+			templateBox.Offset = new PointF(this.ClientSize.Width / 2, this.ClientSize.Height / 2);
 			templateBox.Zoom = 1;
 		}
 		
