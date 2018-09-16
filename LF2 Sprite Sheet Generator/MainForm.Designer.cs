@@ -369,6 +369,7 @@
 			this.toolStripMenuItem_CreateEmptyGrid.Name = "toolStripMenuItem_CreateEmptyGrid";
 			this.toolStripMenuItem_CreateEmptyGrid.Size = new System.Drawing.Size(214, 26);
 			this.toolStripMenuItem_CreateEmptyGrid.Text = "Create &Empty Grid...";
+			this.toolStripMenuItem_CreateEmptyGrid.Click += new System.EventHandler(this.toolStripMenuItem_CreateEmptyGrid_Click);
 			// 
 			// toolStripSeparator1
 			// 
@@ -497,10 +498,10 @@
 			this.checkBox_AlphaChannel.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.checkBox_AlphaChannel.Location = new System.Drawing.Point(6, 146);
 			this.checkBox_AlphaChannel.Name = "checkBox_AlphaChannel";
-			this.checkBox_AlphaChannel.Size = new System.Drawing.Size(182, 24);
+			this.checkBox_AlphaChannel.Size = new System.Drawing.Size(302, 24);
 			this.checkBox_AlphaChannel.TabIndex = 5;
 			this.checkBox_AlphaChannel.TabStop = false;
-			this.checkBox_AlphaChannel.Text = "Preserve alpha channel";
+			this.checkBox_AlphaChannel.Text = "Preserve alpha channel (LF2 incomptible)";
 			this.checkBox_AlphaChannel.UseVisualStyleBackColor = true;
 			// 
 			// checkBox_RenderGuide
