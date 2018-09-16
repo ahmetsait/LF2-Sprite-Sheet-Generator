@@ -63,6 +63,16 @@ namespace LF2.Sprite_Sheet_Generator.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap bringtofront {
+            get {
+                object obj = ResourceManager.GetObject("bringtofront", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap broken_img {
             get {
                 object obj = ResourceManager.GetObject("broken_img", resourceCulture);
@@ -193,9 +203,29 @@ namespace LF2.Sprite_Sheet_Generator.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap scale4 {
+            get {
+                object obj = ResourceManager.GetObject("scale4", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap scaleFit {
             get {
                 object obj = ResourceManager.GetObject("scaleFit", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap sendtoback {
+            get {
+                object obj = ResourceManager.GetObject("sendtoback", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
