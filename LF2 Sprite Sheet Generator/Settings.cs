@@ -29,7 +29,7 @@ namespace LF2.Sprite_Sheet_Generator
 					{
 						File.Delete(SettingsPath);
 					}
-					finally { }
+					catch { }
 				}
 			}
 		}

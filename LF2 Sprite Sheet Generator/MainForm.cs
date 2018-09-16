@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 
 namespace LF2.Sprite_Sheet_Generator
 {
@@ -15,11 +15,10 @@ namespace LF2.Sprite_Sheet_Generator
 		public MainForm()
 		{
 			InitializeComponent();
-			splitContainer.SplitterDistance = 800;
 			Application.ThreadException += Application_ThreadException;
 		}
 
-		private void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
+		private void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
 		{
 			ShowException(e.Exception);
 		}
@@ -80,25 +79,16 @@ namespace LF2.Sprite_Sheet_Generator
 		private void toolStripButton_Move_Click(object sender, EventArgs e)
 		{
 			templateBox.EditMode = EditMode.Move;
-			toolStripButton_Move.Checked = true;
-			toolStripButton_Rotate.Checked = false;
-			toolStripButton_Sclale.Checked = false;
 		}
 
 		private void toolStripButton_Rotate_Click(object sender, EventArgs e)
 		{
 			templateBox.EditMode = EditMode.Rotate;
-			toolStripButton_Move.Checked = false;
-			toolStripButton_Rotate.Checked = true;
-			toolStripButton_Sclale.Checked = false;
 		}
 
-		private void toolStripButton_Sclale_Click(object sender, EventArgs e)
+		private void toolStripButton_Scale_Click(object sender, EventArgs e)
 		{
 			templateBox.EditMode = EditMode.Scale;
-			toolStripButton_Move.Checked = false;
-			toolStripButton_Rotate.Checked = false;
-			toolStripButton_Sclale.Checked = true;
 		}
 
 		private void toolStripButton_ScaleFit_Click(object sender, EventArgs e)
@@ -116,13 +106,21 @@ namespace LF2.Sprite_Sheet_Generator
 			templateBox.Zoom = 2;
 		}
 
+		private void toolStripButton_Scale4_Click(object sender, EventArgs e)
+		{
+			templateBox.Zoom = 4;
+		}
+
+		public void AdjustGuideImage(Image guide)
+		{
+			templateBox.GuideImage = guide;
+			templateBox.ScaleFit();
+		}
+
 		private void toolStripSplitButton_GuideImage_Click(object sender, EventArgs e)
 		{
 			if (openFileDialog_Image.ShowDialog(this) == DialogResult.OK && File.Exists(openFileDialog_Image.FileName))
-			{
-				templateBox.GuideImage = Image.FromFile(openFileDialog_Image.FileName);
-				templateBox.ScaleFit();
-			}
+				AdjustGuideImage(Image.FromFile(openFileDialog_Image.FileName));
 		}
 
 		private void toolStripComboBox_Opacity_SelectedIndexChanged(object sender, EventArgs e)
@@ -140,34 +138,55 @@ namespace LF2.Sprite_Sheet_Generator
 
 		private void templateBox_OffsetChanged(object sender, EventArgs e)
 		{
-			toolStripStatusLabel_Offset.Text = templateBox.Offset.X.ToString("F2") + ", " + templateBox.Offset.Y.ToString("F2");
+			toolStripStatusLabel_Offset.Text = templateBox.Offset.X.ToString("F2") + " , " + templateBox.Offset.Y.ToString("F2");
 			statusStrip.Refresh();
+		}
+
+		string[] imageFilter = { ".bmp", ".dib", ".png", ".jpg", ".jpeg", ".jpe", ".jfif", ".gif", ".emf", ".tif", ".tiff", ".wmf" };
+
+		public void AddSprite(string file)
+		{
+			try
+			{
+				if (imageFilter.Any((ext) => file.EndsWith(ext)))
+				{
+					string name = GetUniqueSpriteName(Path.GetFileNameWithoutExtension(file));
+					Image img = Image.FromFile(file);
+
+					listBox_SpriteParts.Items.Add(name);
+					templateBox.Sprites.Add(name, img);
+				}
+			}
+			catch (Exception ex)
+			{
+				ShowException(ex, "Error Importing Sprite: '" + file + '\'', this);
+			}
+		}
+
+		public void AddSprites(string[] files)
+		{
+			foreach (string file in files)
+				AddSprite(file);
+			templateBox.Invalidate();
+		}
+
+		public string GetUniqueSpriteName(string name)
+		{
+			if (!templateBox.Sprites.ContainsKey(name))
+				return name;
+			else
+			{
+				int i;
+				for (i = 2; templateBox.Sprites.ContainsKey(name + '_' + i); i++) ;
+				return name + '_' + i;
+			}
 		}
 
 		private void button_AddSprite_Click(object sender, EventArgs e)
 		{
 			if (openFileDialog_Image.ShowDialog(this) == DialogResult.OK)
 			{
-				try
-				{
-					foreach (string file in openFileDialog_Image.FileNames)
-					{
-						string name = Path.GetFileNameWithoutExtension(file);
-						Image img = Image.FromFile(file);
-
-						for (Form_Rename fr = new Form_Rename(name); templateBox.Sprites.ContainsKey(name); )
-						{
-							if (fr.ShowDialog(this) == DialogResult.OK)
-								name = fr.textBox.Text.Trim();
-						}
-						listBox_SpriteParts.Items.Add(name);
-						templateBox.Sprites.Add(name, img);
-					}
-				}
-				catch (Exception ex)
-				{
-					ShowException(ex, "Error Importing Sprites", this);
-				}
+				AddSprites(openFileDialog_Image.FileNames);
 			}
 		}
 		
@@ -175,8 +194,12 @@ namespace LF2.Sprite_Sheet_Generator
 		{
 			if (listBox_SpriteParts.SelectedIndex >= 0)
 			{
+				var index = listBox_SpriteParts.SelectedIndex;
 				templateBox.Sprites.Remove(listBox_SpriteParts.SelectedItem as string);
 				listBox_SpriteParts.Items.RemoveAt(listBox_SpriteParts.SelectedIndex);
+				if (listBox_SpriteParts.Items.Count > 0)
+					listBox_SpriteParts.SelectedIndex = index.Clamp(0, listBox_SpriteParts.Items.Count - 1);
+				templateBox.Invalidate();
 			}
 		}
 
@@ -244,17 +267,324 @@ namespace LF2.Sprite_Sheet_Generator
 				while (templateBox.Sprites.ContainsKey(newName));
 				templateBox.Sprites[newName] = templateBox.Sprites[name];
 				templateBox.Sprites.Remove(name);
+				listBox_SpriteParts.SelectedItem = newName;
+				templateBox.Invalidate();
+			}
+		}
+
+		private void AddRender()
+		{
+			if (listBox_SpriteParts.SelectedIndex >= 0)
+			{
+				templateBox.AddRender(
+					(string)listBox_SpriteParts.SelectedItem,
+					new Transform() { Location = templateBox.Offset, Scale = 1, Rotation = 0 }
+				);
+				templateBox.Refresh();
 			}
 		}
 
 		private void listBox_SpriteParts_MouseDoubleClick(object sender, MouseEventArgs e)
 		{
-			if (listBox_SpriteParts.SelectedIndex >= 0)
+			
+		}
+
+		private void listBox_SpriteParts_DragEnter(object sender, DragEventArgs e)
+		{
+			if (e.Data.GetDataPresent(DataFormats.FileDrop))
+				e.Effect = DragDropEffects.Copy;
+		}
+
+		private void listBox_SpriteParts_DragDrop(object sender, DragEventArgs e)
+		{
+			string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+			AddSprites(files);
+		}
+
+		private void templateBox_DragEnter(object sender, DragEventArgs e)
+		{
+			if (e.Data.GetDataPresent(DataFormats.FileDrop))
+				e.Effect = DragDropEffects.Copy;
+		}
+
+		private void templateBox_DragDrop(object sender, DragEventArgs e)
+		{
+			string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+			string selected;
+			if ((selected = files.FirstOrDefault((file) => imageFilter.Any((ext) => file.EndsWith(ext)))) != null)
 			{
-				templateBox.Renders.Add(new Render(
-					(string)listBox_SpriteParts.SelectedItem,
-					new Transform() { Position = templateBox.Offset, Scale = 1, Rotation = 0 }
-				));
+				var img = templateBox.GuideImage;
+				templateBox.GuideImage = null;
+				img.Dispose();
+				templateBox.GuideImage = Image.FromFile(selected);
+			}
+		}
+
+		private void MainForm_KeyDown(object sender, KeyEventArgs e)
+		{
+			
+		}
+
+		private void templateBox_EditModeChanged(object sender, EventArgs e)
+		{
+			switch (templateBox.EditMode)
+			{
+				case EditMode.Move:
+					toolStripButton_Move.Checked = true;
+					toolStripButton_Rotate.Checked = false;
+					toolStripButton_Scale.Checked = false;
+					break;
+				case EditMode.Rotate:
+					toolStripButton_Move.Checked = false;
+					toolStripButton_Rotate.Checked = true;
+					toolStripButton_Scale.Checked = false;
+					break;
+				case EditMode.Scale:
+					toolStripButton_Move.Checked = false;
+					toolStripButton_Rotate.Checked = false;
+					toolStripButton_Scale.Checked = true;
+					break;
+			}
+		}
+
+		private void betterToolStripButton_BringToFront_Click(object sender, EventArgs e)
+		{
+			templateBox.BringSelectionToFront();
+		}
+
+		private void betterToolStripButton_SendToBack_Click(object sender, EventArgs e)
+		{
+			templateBox.SendSelectionToBack();
+		}
+
+		static int editingTransform = 0;
+		public bool Editing { get { return editingTransform > 0; } }
+		// This kinda ugly hack but works
+		class EditingScope : IDisposable
+		{
+			public EditingScope()
+			{
+				editingTransform++;
+			}
+
+			private bool disposed = false; // To detect redundant calls
+
+			protected virtual void Dispose(bool disposing)
+			{
+				if (!disposed)
+				{
+					if (disposing)
+					{
+						// TODO: dispose managed state (managed objects).
+					}
+
+					editingTransform--;
+					// TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+					// TODO: set large fields to null.
+
+					disposed = true;
+				}
+			}
+
+			// TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
+			// ~EditingTrap() {
+			//   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+			//   Dispose(false);
+			// }
+
+			// This code added to correctly implement the disposable pattern.
+			public void Dispose()
+			{
+				// Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+				Dispose(true);
+				// TODO: uncomment the following line if the finalizer is overridden above.
+				// GC.SuppressFinalize(this);
+			}
+		}
+
+		private void templateBox_SelectionChanged(object sender, EventArgs e)
+		{
+			int[] indices = templateBox.SelectedRenders.ToArray();
+			Array.Sort(indices);
+			if (indices.Length == 0)
+			{
+				groupBox_Object.Text = "None";
+				using (var trap = new EditingScope())
+				{
+					textBox_ObjectPosition.Clear();
+					textBox_ObjectRotation.Clear();
+					textBox_ObjectScale.Clear();
+				}
+			}
+			else if (indices.Length == 1)
+			{
+				var render = templateBox.Renders[indices[0]];
+				groupBox_Object.Text = render.spriteName;
+				using (var trap = new EditingScope())
+				{
+					textBox_ObjectPosition.Text = render.transform.X.ToString("F2") + " , " + render.transform.Y.ToString("F2");
+					textBox_ObjectRotation.Text = render.transform.Rotation.ToString("F2");
+					textBox_ObjectScale.Text = render.transform.Scale.ToString("F2");
+				}
+			}
+			else if (indices.Length > 1)
+			{
+				groupBox_Object.Text = '(' + indices.Length.ToString() + ") Objects";
+				bool pos = true, rot = true, sca = true;
+				Transform transform = templateBox.Renders[indices[0]].transform;
+				for (int i = 1; i < indices.Length && (pos || rot || sca); i++)
+				{
+					if (templateBox.Renders[indices[i]].transform.Location != transform.Location)
+						pos = false;
+					if (templateBox.Renders[indices[i]].transform.Rotation != transform.Rotation)
+						rot = false;
+					if (templateBox.Renders[indices[i]].transform.Scale != transform.Scale)
+						sca = false;
+				}
+				using (var trap = new EditingScope())
+				{
+					if (pos)
+						textBox_ObjectPosition.Text = transform.X.ToString("F2") + " , " + transform.Y.ToString("F2");
+					else
+						textBox_ObjectPosition.Clear();
+					if (rot)
+						textBox_ObjectRotation.Text = transform.Rotation.ToString("F2");
+					else
+						textBox_ObjectRotation.Clear();
+					if (sca)
+						textBox_ObjectScale.Text = transform.Scale.ToString("F2");
+					else
+						textBox_ObjectScale.Clear();
+				}
+			}
+			textBox_ObjectPosition.Refresh();
+			textBox_ObjectRotation.Refresh();
+			textBox_ObjectScale.Refresh();
+		}
+
+		private void textBox_ObjectPosition_TextChanged(object sender, EventArgs e)
+		{
+			if (Editing)
+				return;
+			float x, y;
+			string[] parts = textBox_ObjectPosition.Text.Split(',');
+			if (parts.Length != 2
+				|| !float.TryParse(parts[0].Trim(), out x)
+				|| !float.TryParse(parts[1].Trim(), out y))
+				return;
+			foreach (int index in templateBox.SelectedRenders)
+			{
+				templateBox.Renders[index].transform.Location = new PointF(x, y);
+			}
+			templateBox.Invalidate();
+		}
+
+		private void textBox_ObjectRotation_TextChanged(object sender, EventArgs e)
+		{
+			if (Editing)
+				return;
+			float r;
+			if (!float.TryParse(textBox_ObjectRotation.Text.Trim(), out r))
+				return;
+			foreach (int index in templateBox.SelectedRenders)
+			{
+				templateBox.Renders[index].transform.Location = templateBox.Renders[index].transform.Location.RotateRelativeTo(templateBox.GetMidPointOfSelection(), r);
+				templateBox.Renders[index].transform.Rotation = r;
+			}
+			templateBox.Invalidate();
+		}
+
+		private void textBox_ObjectScale_TextChanged(object sender, EventArgs e)
+		{
+			if (Editing)
+				return;
+			float s;
+			if (!float.TryParse(textBox_ObjectScale.Text.Trim(), out s))
+				return;
+			foreach (int index in templateBox.SelectedRenders)
+			{
+				templateBox.Renders[index].transform.Location = templateBox.Renders[index].transform.Location.ScaleRelativeTo(templateBox.GetMidPointOfSelection(), s);
+				templateBox.Renders[index].transform.Scale = s;
+			}
+			templateBox.Invalidate();
+		}
+
+		private void listBox_SpriteParts_DoubleClick(object sender, EventArgs e)
+		{
+			AddRender();
+		}
+
+		private void button_Delete_Click(object sender, EventArgs e)
+		{
+			templateBox.DeleteSelection();
+		}
+		
+		private void trackBar_AlphaCut_Scroll(object sender, EventArgs e)
+		{
+			label_AlphaCut.Text = trackBar_AlphaCut.Value.ToString();
+			label_AlphaCut.Refresh();
+		}
+
+		private void trackBar_Transparency_Scroll(object sender, EventArgs e)
+		{
+			label_Transparency.Text = trackBar_Transparency.Value.ToString();
+			label_Transparency.Refresh();
+		}
+
+		private void button_LoadTemplate_Click(object sender, EventArgs e)
+		{
+			if (openFileDialog_Template.ShowDialog(this) == DialogResult.OK)
+			{
+				try
+				{
+					using (FileStream settings = new FileStream(openFileDialog_Template.FileName, FileMode.Open, FileAccess.Read))
+					{
+						XmlSerializer xs = new XmlSerializer(typeof(Render[]));
+						templateBox.LoadTemplate((Render[])xs.Deserialize(settings));
+					}
+				}
+				catch (Exception ex)
+				{
+					ShowException(ex, "Error Loading Template: '" + openFileDialog_Template.FileName + '\'', this);
+				}
+			}
+		}
+
+		private void button_SaveTemplate_Click(object sender, EventArgs e)
+		{
+			if (saveFileDialog_Template.ShowDialog(this) == DialogResult.OK)
+			{
+				try
+				{
+					using (FileStream fs = new FileStream(saveFileDialog_Template.FileName, FileMode.Create, FileAccess.Write))
+					{
+						XmlSerializer xs = new XmlSerializer(typeof(Render[]));
+						xs.Serialize(fs, templateBox.Renders.ToArray());
+					}
+				}
+				catch (Exception ex)
+				{
+					ShowException(ex, "Error Saving Template: '" + saveFileDialog_Template.FileName + '\'', this);
+				}
+			}
+		}
+
+		private void button_PreviewSprite_Click(object sender, EventArgs e)
+		{
+			using (Form_Preview fp = new Form_Preview(templateBox
+					.RenderFinalImage(trackBar_AlphaCut.Value, trackBar_Transparency.Value, checkBox_RenderGuide.Checked, checkBox_AlphaChannel.Checked)))
+			{
+				fp.ShowDialog(this);
+			}
+		}
+
+		private void button_SaveSprite_Click(object sender, EventArgs e)
+		{
+			if (saveFileDialog_Sprite.ShowDialog(this) == DialogResult.OK)
+			{
+				templateBox
+					.RenderFinalImage(trackBar_AlphaCut.Value, trackBar_Transparency.Value, checkBox_RenderGuide.Checked, checkBox_AlphaChannel.Checked)
+					.Save(saveFileDialog_Sprite.FileName, ImageFormat.Bmp);
 			}
 		}
 	}
