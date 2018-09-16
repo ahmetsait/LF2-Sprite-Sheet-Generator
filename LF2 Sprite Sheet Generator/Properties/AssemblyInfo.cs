@@ -37,5 +37,5 @@ using System.Runtime.InteropServices;
 
 internal static class Info
 {
-	public const string version = "0.1.0";
+	public const string version = "1.0.0";
 }
