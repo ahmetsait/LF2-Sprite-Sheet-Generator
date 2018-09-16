@@ -587,5 +587,16 @@ namespace LF2.Sprite_Sheet_Generator
 					.Save(saveFileDialog_Sprite.FileName, ImageFormat.Bmp);
 			}
 		}
+
+		private void toolStripMenuItem_CreateEmptyGrid_Click(object sender, EventArgs e)
+		{
+			using (Form_CreateGrid fcg = new Form_CreateGrid())
+			{
+				if (fcg.ShowDialog(this) == DialogResult.OK)
+				{
+					templateBox.GuideImage = fcg.grid;
+				}
+			}
+		}
 	}
 }
