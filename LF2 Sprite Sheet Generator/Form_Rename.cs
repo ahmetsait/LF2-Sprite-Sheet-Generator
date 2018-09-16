@@ -15,12 +15,20 @@ namespace LF2.Sprite_Sheet_Generator
 		public Form_Rename(string oldName)
 		{
 			InitializeComponent();
-			label_Name.Text = oldName;
+			textBox.Text = old = oldName;
+		}
+
+		private readonly string old;
+
+		private void Form_Rename_Shown(object sender, EventArgs e)
+		{
+			textBox.SelectAll();
+			textBox.Select();
 		}
 		
 		private void button_Ok_Click(object sender, EventArgs e)
 		{
-			if (!string.IsNullOrWhiteSpace(textBox.Text))
+			if (textBox.Text != old && !string.IsNullOrWhiteSpace(textBox.Text))
 				this.DialogResult = DialogResult.OK;
 		}
 
