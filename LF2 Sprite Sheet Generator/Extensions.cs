@@ -135,22 +135,27 @@ namespace LF2.Sprite_Sheet_Generator
 		public static void ApplyAlphaCutFilter(this Bitmap bitmap, byte threshold)
 		{
 			if (bitmap.PixelFormat != PixelFormat.Format32bppArgb)
-				throw new ArgumentException("Format32bppArgb required.", "bitmap");
+				throw new NotSupportedException("Only 32bppARGB pixel format is supported.");
 
+			int bytes = Image.GetPixelFormatSize(bitmap.PixelFormat) / 8;
 			BitmapData data = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadWrite, bitmap.PixelFormat);
 
-			byte[] buffer = new byte[data.Stride * data.Height];
+			byte[] buffer = new byte[Math.Abs(data.Stride) * data.Height];
 			Marshal.Copy(data.Scan0, buffer, 0, buffer.Length);
 
-			for (int k = 0; k < buffer.Length; k += 4)
+			for (int i = 0; i < data.Height; i++)
 			{
-				byte alpha = buffer[k + 3];
-				if (alpha < threshold)
+				for (int j = 0; j < data.Width; j++)
 				{
-					buffer[k] = 0;
-					buffer[k + 1] = 0;
-					buffer[k + 2] = 0;
-					buffer[k + 3] = 0;
+					int k = (i * data.Stride) + (j * bytes);
+					byte alpha = buffer[k + 3];
+					if (alpha < threshold)
+					{
+						buffer[k] = 0;
+						buffer[k + 1] = 0;
+						buffer[k + 2] = 0;
+						buffer[k + 3] = 0;
+					}
 				}
 			}
 
@@ -161,30 +166,35 @@ namespace LF2.Sprite_Sheet_Generator
 		public static void ApplyBlackFilter(this Bitmap bitmap, byte threshold)
 		{
 			if (bitmap.PixelFormat != PixelFormat.Format24bppRgb && bitmap.PixelFormat != PixelFormat.Format32bppArgb)
-				throw new ArgumentException("Format24bppRgb or Format32bppArgb required.", "bitmap");
+				throw new NotSupportedException("Unsupported pixel format: " + bitmap.PixelFormat);
 
-			bool alphaChannel = bitmap.PixelFormat == PixelFormat.Format32bppArgb;
+			int bytes = Image.GetPixelFormatSize(bitmap.PixelFormat) / 8;
+			bool alphaChannel = Image.IsAlphaPixelFormat(bitmap.PixelFormat);
 			BitmapData data = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadWrite, bitmap.PixelFormat);
 			
-			byte[] buffer = new byte[data.Stride * data.Height];
+			byte[] buffer = new byte[Math.Abs(data.Stride) * data.Height];
 			Marshal.Copy(data.Scan0, buffer, 0, buffer.Length);
 
-			for (int i = 0; i < buffer.Length; i += alphaChannel ? 4 : 3)
+			for (int i = 0; i < data.Height; i++)
 			{
-				byte blue = buffer[i];
-				byte red = buffer[i + 1];
-				byte green = buffer[i + 2];
-				byte max
-					= blue > red ? blue
-					: red > green ? red
-					: green;
-				if (max < threshold)
+				for (int j = 0; j < data.Width; j++)
 				{
-					buffer[i] = 0;
-					buffer[i + 1] = 0;
-					buffer[i + 2] = 0;
-					if (alphaChannel)
-						buffer[i + 3] = 0;
+					int k = (i * data.Stride) + (j * bytes);
+					byte blue = buffer[k];
+					byte red = buffer[k + 1];
+					byte green = buffer[k + 2];
+					byte max
+						= blue > red ? blue
+						: red > green ? red
+						: green;
+					if (max < threshold)
+					{
+						buffer[k] = 0;
+						buffer[k + 1] = 0;
+						buffer[k + 2] = 0;
+						if (alphaChannel)
+							buffer[k + 3] = 0;
+					}
 				}
 			}
 
