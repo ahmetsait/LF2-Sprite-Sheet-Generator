@@ -452,7 +452,8 @@ namespace LF2.Sprite_Sheet_Generator
 							((Bitmap)sprite).ApplyBlackFilter((byte)transparencyRange.Clamp(0, 255));
 							g.TranslateTransform(render.transform.X, render.transform.Y);
 							g.RotateTransform(render.transform.Rotation);
-							Rectangle spriteBounds = new Rectangle(-sprite.Width / 2, -sprite.Height / 2, sprite.Width, sprite.Height).Multiply(render.transform.Scale);
+							g.ScaleTransform(render.transform.Scale, render.transform.Scale);
+							Rectangle spriteBounds = new Rectangle(-sprite.Width / 2, -sprite.Height / 2, sprite.Width, sprite.Height);
 							g.DrawImage(
 								sprite,
 								spriteBounds,
