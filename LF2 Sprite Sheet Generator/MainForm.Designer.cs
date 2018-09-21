@@ -48,12 +48,13 @@
 			this.toolStripButton_Scale4 = new LF2.Sprite_Sheet_Generator.BetterToolStripButton();
 			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
 			this.toolStripButton_Transparency = new LF2.Sprite_Sheet_Generator.BetterToolStripButton();
-			this.toolStripButton_BackgroundStyle = new LF2.Sprite_Sheet_Generator.BetterToolStripDropDownButton();
+			this.toolStripDropDownButton_BackgroundStyle = new LF2.Sprite_Sheet_Generator.BetterToolStripDropDownButton();
 			this.toolStripMenuItem_ChessBoard = new LF2.Sprite_Sheet_Generator.BetterToolStripMenuItem();
 			this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
 			this.toolStripMenuItem_Color = new LF2.Sprite_Sheet_Generator.BetterToolStripMenuItem();
 			this.toolStripMenuItem_AdjustColor = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSplitButton_GuideImage = new LF2.Sprite_Sheet_Generator.BetterToolStripSplitButton();
+			this.toolStripDropDownButton_GuideImage = new LF2.Sprite_Sheet_Generator.BetterToolStripDropDownButton();
+			this.toolStripMenuItem_LoadFromFile = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem_CreateEmptyGrid = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.opacityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -169,8 +170,8 @@
             this.toolStripButton_Scale4,
             this.toolStripSeparator3,
             this.toolStripButton_Transparency,
-            this.toolStripButton_BackgroundStyle,
-            this.toolStripSplitButton_GuideImage});
+            this.toolStripDropDownButton_BackgroundStyle,
+            this.toolStripDropDownButton_GuideImage});
 			this.toolBox.Location = new System.Drawing.Point(0, 0);
 			this.toolBox.Name = "toolBox";
 			this.toolBox.Size = new System.Drawing.Size(1262, 29);
@@ -301,19 +302,19 @@
 			this.toolStripButton_Transparency.ToolTipText = "Transparent black pixels on guide image";
 			this.toolStripButton_Transparency.CheckedChanged += new System.EventHandler(this.toolStripButton_Transparency_CheckedChanged);
 			// 
-			// toolStripButton_BackgroundStyle
+			// toolStripDropDownButton_BackgroundStyle
 			// 
-			this.toolStripButton_BackgroundStyle.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.toolStripDropDownButton_BackgroundStyle.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem_ChessBoard,
             this.toolStripSeparator4,
             this.toolStripMenuItem_Color,
             this.toolStripMenuItem_AdjustColor});
-			this.toolStripButton_BackgroundStyle.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton_BackgroundStyle.Image")));
-			this.toolStripButton_BackgroundStyle.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButton_BackgroundStyle.Interpolation = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-			this.toolStripButton_BackgroundStyle.Name = "toolStripButton_BackgroundStyle";
-			this.toolStripButton_BackgroundStyle.Size = new System.Drawing.Size(36, 26);
-			this.toolStripButton_BackgroundStyle.ToolTipText = "Background Style";
+			this.toolStripDropDownButton_BackgroundStyle.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton_BackgroundStyle.Image")));
+			this.toolStripDropDownButton_BackgroundStyle.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripDropDownButton_BackgroundStyle.Interpolation = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+			this.toolStripDropDownButton_BackgroundStyle.Name = "toolStripDropDownButton_BackgroundStyle";
+			this.toolStripDropDownButton_BackgroundStyle.Size = new System.Drawing.Size(36, 26);
+			this.toolStripDropDownButton_BackgroundStyle.ToolTipText = "Background Style";
 			// 
 			// toolStripMenuItem_ChessBoard
 			// 
@@ -348,24 +349,28 @@
 			this.toolStripMenuItem_AdjustColor.Text = "&Adjust Color...";
 			this.toolStripMenuItem_AdjustColor.Click += new System.EventHandler(this.toolStripMenuItem_AdjustColor_Click);
 			// 
-			// toolStripSplitButton_GuideImage
+			// toolStripDropDownButton_GuideImage
 			// 
-			this.toolStripSplitButton_GuideImage.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripSplitButton_GuideImage.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.toolStripDropDownButton_GuideImage.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripDropDownButton_GuideImage.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem_LoadFromFile,
             this.toolStripMenuItem_CreateEmptyGrid,
             this.toolStripSeparator1,
             this.opacityToolStripMenuItem,
             this.toolStripComboBox_Opacity});
-			this.toolStripSplitButton_GuideImage.Image = global::LF2.Sprite_Sheet_Generator.Properties.Resources.template_head;
-			this.toolStripSplitButton_GuideImage.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripSplitButton_GuideImage.Interpolation = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
-			this.toolStripSplitButton_GuideImage.Name = "toolStripSplitButton_GuideImage";
-			this.toolStripSplitButton_GuideImage.Size = new System.Drawing.Size(41, 26);
-			this.toolStripSplitButton_GuideImage.ToolTipText = "Adjust Guide Image...";
-			this.toolStripSplitButton_GuideImage.ButtonClick += new System.EventHandler(this.toolStripSplitButton_GuideImage_Click);
+			this.toolStripDropDownButton_GuideImage.Image = global::LF2.Sprite_Sheet_Generator.Properties.Resources.template_head;
+			this.toolStripDropDownButton_GuideImage.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripDropDownButton_GuideImage.Interpolation = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
+			this.toolStripDropDownButton_GuideImage.Name = "toolStripDropDownButton_GuideImage";
+			this.toolStripDropDownButton_GuideImage.Size = new System.Drawing.Size(36, 26);
+			this.toolStripDropDownButton_GuideImage.ToolTipText = "Adjust Guide Image...";
 			// 
 			// toolStripMenuItem_LoadFromFile
+			// 
+			this.toolStripMenuItem_LoadFromFile.Name = "toolStripMenuItem_LoadFromFile";
+			this.toolStripMenuItem_LoadFromFile.Size = new System.Drawing.Size(214, 26);
+			this.toolStripMenuItem_LoadFromFile.Text = "Load From &File...";
+			this.toolStripMenuItem_LoadFromFile.Click += new System.EventHandler(this.toolStripMenuItem_LoadFromFile_Click);
 			// 
 			// toolStripMenuItem_CreateEmptyGrid
 			// 
@@ -970,7 +975,7 @@
 		private System.Windows.Forms.ToolStrip toolBox;
 		private System.Windows.Forms.SplitContainer splitContainer;
 		private TemplateBox templateBox;
-		private BetterToolStripDropDownButton toolStripButton_BackgroundStyle;
+		private BetterToolStripDropDownButton toolStripDropDownButton_BackgroundStyle;
 		private BetterToolStripMenuItem toolStripMenuItem_ChessBoard;
 		private BetterToolStripMenuItem toolStripMenuItem_Color;
 		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_AdjustColor;
@@ -984,7 +989,6 @@
 		private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_Offset;
 		private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel3;
 		private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_Zoom;
-		private BetterToolStripSplitButton toolStripSplitButton_GuideImage;
 		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_CreateEmptyGrid;
 		private System.Windows.Forms.ToolStripMenuItem opacityToolStripMenuItem;
 		private System.Windows.Forms.ToolStripComboBox toolStripComboBox_Opacity;
@@ -1035,6 +1039,8 @@
 		private BetterToolStripButton toolStripButton_Scale4;
 		private System.Windows.Forms.TextBox textBox_RenderSymbol;
 		private System.Windows.Forms.Label label6;
+		private BetterToolStripDropDownButton toolStripDropDownButton_GuideImage;
+		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_LoadFromFile;
 	}
 }
 
