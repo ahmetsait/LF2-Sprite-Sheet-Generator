@@ -133,12 +133,12 @@ namespace LF2.Sprite_Sheet_Generator
 
 		private void templateBox_ZoomChanged(object sender, EventArgs e)
 		{
-			toolStripStatusLabel_Zoom.Text = templateBox.Zoom.ToString("F2");
+			toolStripStatusLabel_Zoom.Text = templateBox.Zoom.ToString("0.##");
 		}
 
 		private void templateBox_OffsetChanged(object sender, EventArgs e)
 		{
-			toolStripStatusLabel_Offset.Text = templateBox.Offset.X.ToString("F2") + " , " + templateBox.Offset.Y.ToString("F2");
+			toolStripStatusLabel_Offset.Text = templateBox.Offset.X.ToString("0.##") + " , " + templateBox.Offset.Y.ToString("0.##");
 			statusStrip.Refresh();
 		}
 
@@ -422,9 +422,10 @@ namespace LF2.Sprite_Sheet_Generator
 				groupBox_Object.Text = render.spriteName;
 				using (var trap = new EditingScope())
 				{
-					textBox_ObjectPosition.Text = render.transform.X.ToString("F2") + " , " + render.transform.Y.ToString("F2");
-					textBox_ObjectRotation.Text = render.transform.Rotation.ToString("F2");
-					textBox_ObjectScale.Text = render.transform.Scale.ToString("F2");
+					textBox_RenderSymbol.Text = render.symbolName;
+					textBox_RenderPosition.Text = render.transform.X.ToString("0.##") + " , " + render.transform.Y.ToString("0.##");
+					textBox_RenderRotation.Text = render.transform.Rotation.ToString("0.####");
+					textBox_RenderScale.Text = render.transform.Scale.ToString("0.####");
 				}
 			}
 			else if (indices.Length > 1)
@@ -444,7 +445,7 @@ namespace LF2.Sprite_Sheet_Generator
 				using (var trap = new EditingScope())
 				{
 					if (pos)
-						textBox_ObjectPosition.Text = transform.X.ToString("F2") + " , " + transform.Y.ToString("F2");
+						textBox_RenderPosition.Text = transform.X.ToString("0.##") + " , " + transform.Y.ToString("0.##");
 					else
 						textBox_ObjectPosition.Clear();
 					if (rot)
