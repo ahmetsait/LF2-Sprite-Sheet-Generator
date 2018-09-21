@@ -158,6 +158,26 @@ namespace LF2.Sprite_Sheet_Generator
 		}
 		public event EventHandler OffsetChanged;
 
+		bool autoFocus;
+		[DefaultValue(false)]
+		public bool AutoFocus
+		{
+			get { return autoFocus; }
+			set
+			{
+				bool old = autoFocus;
+				autoFocus = value;
+
+				this.Invalidate();
+
+				if (old != value && AutoFocusChanged != null)
+				{
+					AutoFocusChanged(this, EventArgs.Empty);
+				}
+			}
+		}
+		public event EventHandler AutoFocusChanged;
+
 		bool guideTransparency;
 		[DefaultValue(false)]
 		public bool GuideTransparency
@@ -1005,19 +1025,22 @@ namespace LF2.Sprite_Sheet_Generator
 		protected override void OnMouseEnter(EventArgs e)
 		{
 			base.OnMouseEnter(e);
-			Form form = this.FindForm();
-			Control c = form.ActiveControl;
-			while (c is ContainerControl)
-				c = ((ContainerControl)c).ActiveControl;
-			oldActive = c;
-			this.Select();
+			if (autoFocus)
+			{
+				Form form = this.FindForm();
+				Control c = form.ActiveControl;
+				while (c is ContainerControl)
+					c = ((ContainerControl)c).ActiveControl;
+				oldActive = c;
+				this.Select();
+			}
 		}
 		
 		protected override void OnMouseLeave(EventArgs e)
 		{
 			base.OnMouseLeave(e);
-			Form form = this.FindForm();
-			oldActive?.Select();
+			if (autoFocus)
+				oldActive?.Select();
 		}
 
 		protected override void OnMouseWheel(MouseEventArgs e)
@@ -1031,22 +1054,26 @@ namespace LF2.Sprite_Sheet_Generator
 
 		#region Keyboard Handlers
 
-		protected override void OnKeyDown(KeyEventArgs e)
-		{
-			base.OnKeyDown(e);
-			switch (e.KeyCode)
-			{
-				case Keys.G:
-					this.EditMode = EditMode.Move;
-					break;
-				case Keys.R:
-					this.EditMode = EditMode.Rotate;
-					break;
-				case Keys.S:
-					this.EditMode = EditMode.Scale;
-					break;
-			}
-		}
+		// This doesn't make sense to implement here
+		//protected override void OnKeyDown(KeyEventArgs e)
+		//{
+		//	switch (e.KeyCode)
+		//	{
+		//		case Keys.G:
+		//			this.EditMode = EditMode.Move;
+		//			break;
+		//		case Keys.R:
+		//			this.EditMode = EditMode.Rotate;
+		//			break;
+		//		case Keys.S:
+		//			this.EditMode = EditMode.Scale;
+		//			break;
+		//		case Keys.Delete:
+		//			DeleteSelection();
+		//			break;
+		//	}
+		//	base.OnKeyDown(e);
+		//}
 
 		#endregion
 	}
