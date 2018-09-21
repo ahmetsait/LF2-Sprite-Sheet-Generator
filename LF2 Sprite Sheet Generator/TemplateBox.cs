@@ -699,7 +699,7 @@ namespace LF2.Sprite_Sheet_Generator
 				renders.RemoveAt(index);
 			}
 			int start = renders.Count;
-			renders.AddRange(selection.Reverse());
+			renders.AddRange(selection);
 			selectedRenders.Clear();
 			for (int i = start; i < renders.Count; i++)
 				selectedRenders.Add(i);
@@ -719,7 +719,7 @@ namespace LF2.Sprite_Sheet_Generator
 				selection[i] = renders[index];
 				renders.RemoveAt(index);
 			}
-			renders.InsertRange(0, selection.Reverse());
+			renders.InsertRange(0, selection);
 			selectedRenders.Clear();
 			for (int i = 0; i < selection.Length; i++)
 				selectedRenders.Add(i);
