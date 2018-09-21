@@ -75,20 +75,23 @@
 			this.groupBox_Template = new System.Windows.Forms.GroupBox();
 			this.button_SaveTemplate = new System.Windows.Forms.Button();
 			this.button_LoadTemplate = new System.Windows.Forms.Button();
-			this.button_Delete = new System.Windows.Forms.Button();
 			this.groupBox_Render = new System.Windows.Forms.GroupBox();
+			this.textBox_RenderSymbol = new System.Windows.Forms.TextBox();
 			this.textBox_RenderPosition = new System.Windows.Forms.TextBox();
 			this.label4 = new System.Windows.Forms.Label();
 			this.textBox_RenderRotation = new System.Windows.Forms.TextBox();
 			this.label3 = new System.Windows.Forms.Label();
+			this.label6 = new System.Windows.Forms.Label();
 			this.textBox_RenderScale = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
-			this.listBox_SpriteParts = new System.Windows.Forms.ListBox();
 			this.drawBox_Symbol = new LF2.Sprite_Sheet_Generator.DrawBox();
 			this.checkBox_RenderTransparency = new System.Windows.Forms.CheckBox();
+			this.listBox_Symbols = new System.Windows.Forms.ListBox();
 			this.button_AddRender = new System.Windows.Forms.Button();
 			this.button_RenameSymbol = new System.Windows.Forms.Button();
+			this.button_RemoveSymbol = new System.Windows.Forms.Button();
 			this.button_MoveDown = new System.Windows.Forms.Button();
+			this.button_AddSymbol = new System.Windows.Forms.Button();
 			this.button_MoveUp = new System.Windows.Forms.Button();
 			this.colorDialog = new System.Windows.Forms.ColorDialog();
 			this.openFileDialog_Image = new System.Windows.Forms.OpenFileDialog();
@@ -106,6 +109,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.trackBar_Transparency)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar_AlphaCut)).BeginInit();
 			this.groupBox_Template.SuspendLayout();
+			this.groupBox_Render.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// statusStrip
@@ -414,14 +418,14 @@
 			// 
 			this.splitContainer.Panel2.BackColor = System.Drawing.SystemColors.Control;
 			this.splitContainer.Panel2.Controls.Add(this.panel_ObjectProperties);
-			this.splitContainer.Panel2.Controls.Add(this.drawBox_SpritePart);
-			this.splitContainer.Panel2.Controls.Add(this.checkBox_SpritePartsTransparency);
-			this.splitContainer.Panel2.Controls.Add(this.listBox_SpriteParts);
+			this.splitContainer.Panel2.Controls.Add(this.drawBox_Symbol);
+			this.splitContainer.Panel2.Controls.Add(this.checkBox_RenderTransparency);
+			this.splitContainer.Panel2.Controls.Add(this.listBox_Symbols);
 			this.splitContainer.Panel2.Controls.Add(this.button_AddRender);
-			this.splitContainer.Panel2.Controls.Add(this.button_Rename);
-			this.splitContainer.Panel2.Controls.Add(this.button_RemoveSprite);
+			this.splitContainer.Panel2.Controls.Add(this.button_RenameSymbol);
+			this.splitContainer.Panel2.Controls.Add(this.button_RemoveSymbol);
 			this.splitContainer.Panel2.Controls.Add(this.button_MoveDown);
-			this.splitContainer.Panel2.Controls.Add(this.button_AddSprite);
+			this.splitContainer.Panel2.Controls.Add(this.button_AddSymbol);
 			this.splitContainer.Panel2.Controls.Add(this.button_MoveUp);
 			this.splitContainer.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
 			this.splitContainer.Size = new System.Drawing.Size(1262, 619);
@@ -461,7 +465,7 @@
 			this.panel_ObjectProperties.AutoScroll = true;
 			this.panel_ObjectProperties.Controls.Add(this.groupBox_Sprite);
 			this.panel_ObjectProperties.Controls.Add(this.groupBox_Template);
-			this.panel_ObjectProperties.Controls.Add(this.groupBox_Object);
+			this.panel_ObjectProperties.Controls.Add(this.groupBox_Render);
 			this.panel_ObjectProperties.Location = new System.Drawing.Point(3, 209);
 			this.panel_ObjectProperties.Name = "panel_ObjectProperties";
 			this.panel_ObjectProperties.Size = new System.Drawing.Size(472, 407);
@@ -658,24 +662,12 @@
 			this.button_LoadTemplate.Click += new System.EventHandler(this.button_LoadTemplate_Click);
 			// 
 			// 
-			this.groupBox_Object.AutoSize = true;
-			this.groupBox_Object.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.groupBox_Object.Controls.Add(this.button_Delete);
-			this.groupBox_Object.Controls.Add(this.textBox_ObjectPosition);
-			this.groupBox_Object.Controls.Add(this.label4);
-			this.groupBox_Object.Controls.Add(this.textBox_ObjectRotation);
-			this.groupBox_Object.Controls.Add(this.label3);
-			this.groupBox_Object.Controls.Add(this.textBox_ObjectScale);
-			this.groupBox_Object.Controls.Add(this.label1);
-			this.groupBox_Object.ForeColor = System.Drawing.Color.Navy;
-			this.groupBox_Object.Location = new System.Drawing.Point(3, 3);
-			this.groupBox_Object.Name = "groupBox_Object";
-			this.groupBox_Object.Size = new System.Drawing.Size(235, 183);
-			this.groupBox_Object.TabIndex = 2;
-			this.groupBox_Object.TabStop = false;
-			this.groupBox_Object.Text = "None";
+			this.groupBox_Render.AutoSize = true;
+			this.groupBox_Render.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.groupBox_Render.Controls.Add(this.textBox_RenderSymbol);
 			this.groupBox_Render.Controls.Add(this.textBox_RenderPosition);
 			this.groupBox_Render.Controls.Add(this.label4);
+			this.groupBox_Render.Controls.Add(this.textBox_RenderRotation);
 			this.groupBox_Render.Controls.Add(this.label3);
 			this.groupBox_Render.Controls.Add(this.label6);
 			this.groupBox_Render.Controls.Add(this.textBox_RenderScale);
@@ -688,17 +680,8 @@
 			this.groupBox_Render.TabStop = false;
 			this.groupBox_Render.Text = "Object";
 			// 
-			// button_Delete
+			// textBox_RenderSymbol
 			// 
-			this.button_Delete.ForeColor = System.Drawing.SystemColors.ControlText;
-			this.button_Delete.Location = new System.Drawing.Point(10, 125);
-			this.button_Delete.Name = "button_Delete";
-			this.button_Delete.Size = new System.Drawing.Size(219, 32);
-			this.button_Delete.TabIndex = 3;
-			this.button_Delete.TabStop = false;
-			this.button_Delete.Text = "Delete Selection";
-			this.button_Delete.UseVisualStyleBackColor = true;
-			this.button_Delete.Click += new System.EventHandler(this.button_Delete_Click);
 			this.textBox_RenderSymbol.Location = new System.Drawing.Point(81, 26);
 			this.textBox_RenderSymbol.Name = "textBox_RenderSymbol";
 			this.textBox_RenderSymbol.TabIndex = 1;
@@ -708,8 +691,12 @@
 			// 
 			// textBox_RenderPosition
 			// 
-			this.textBox_ObjectPosition.TextChanged += new System.EventHandler(this.textBox_ObjectPosition_TextChanged);
-			this.textBox_ObjectPosition.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox_ObjectPosition_TextChanged);
+			this.textBox_RenderPosition.Location = new System.Drawing.Point(81, 59);
+			this.textBox_RenderPosition.Name = "textBox_RenderPosition";
+			this.textBox_RenderPosition.Size = new System.Drawing.Size(148, 27);
+			this.textBox_RenderPosition.TabIndex = 2;
+			this.textBox_RenderPosition.TextChanged += new System.EventHandler(this.textBox_RenderPosition_TextChanged);
+			this.textBox_RenderPosition.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox_RenderPosition_KeyDown);
 			// 
 			// label4
 			// 
@@ -721,12 +708,8 @@
 			this.label4.TabIndex = 1;
 			this.label4.Text = "Scale:";
 			// 
+			// textBox_RenderRotation
 			// 
-			this.textBox_ObjectRotation.Location = new System.Drawing.Point(81, 59);
-			this.textBox_ObjectRotation.Name = "textBox_ObjectRotation";
-			this.textBox_ObjectRotation.Size = new System.Drawing.Size(148, 27);
-			this.textBox_ObjectRotation.TabIndex = 0;
-			this.textBox_ObjectRotation.TextChanged += new System.EventHandler(this.textBox_ObjectRotation_TextChanged);
 			this.textBox_RenderRotation.Location = new System.Drawing.Point(81, 92);
 			this.textBox_RenderRotation.Name = "textBox_RenderRotation";
 			this.textBox_RenderRotation.Size = new System.Drawing.Size(148, 27);
@@ -744,11 +727,8 @@
 			this.label3.TabIndex = 1;
 			this.label3.Text = "Rotation:";
 			// 
-			// textBox_ObjectScale
+			// label6
 			// 
-			this.textBox_ObjectScale.Name = "textBox_ObjectScale";
-			this.textBox_ObjectScale.TextChanged += new System.EventHandler(this.textBox_ObjectScale_TextChanged);
-			this.textBox_ObjectScale.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox_ObjectScale_TextChanged);
 			this.label6.AutoSize = true;
 			this.label6.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.label6.Location = new System.Drawing.Point(11, 29);
@@ -1034,7 +1014,6 @@
 		private System.Windows.Forms.TextBox textBox_RenderRotation;
 		private System.Windows.Forms.TextBox textBox_RenderPosition;
 		private System.Windows.Forms.Button button_AddRender;
-		private System.Windows.Forms.Button button_Delete;
 		private System.Windows.Forms.GroupBox groupBox_Render;
 		private System.Windows.Forms.SaveFileDialog saveFileDialog_Sprite;
 		private System.Windows.Forms.SaveFileDialog saveFileDialog_Template;
@@ -1054,6 +1033,8 @@
 		private System.Windows.Forms.OpenFileDialog openFileDialog_Template;
 		private System.Windows.Forms.CheckBox checkBox_AlphaChannel;
 		private BetterToolStripButton toolStripButton_Scale4;
+		private System.Windows.Forms.TextBox textBox_RenderSymbol;
+		private System.Windows.Forms.Label label6;
 	}
 }
 
