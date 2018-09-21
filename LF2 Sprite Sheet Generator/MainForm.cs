@@ -37,6 +37,41 @@ namespace LF2.Sprite_Sheet_Generator
 			MessageBox.Show(owner ?? this, ex.ToString(), title ?? "Unhandled Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 		}
 
+		public Control GetMostInnerActiveControl()
+		{
+			Control c = this.ActiveControl;
+			while (c is ContainerControl)
+				c = ((ContainerControl)c).ActiveControl;
+			return c;
+		}
+
+		protected override bool ProcessCmdKey(ref Message message, Keys keys)
+		{
+			if (keys == (Keys.D | Keys.Control))
+			{
+				templateBox.DuplicateSelection();
+			}
+			if (GetMostInnerActiveControl() != textBox_RenderSymbol)
+			{
+				switch (keys)
+				{
+					case Keys.G:
+						templateBox.EditMode = EditMode.Move;
+						return true;
+					case Keys.R:
+						templateBox.EditMode = EditMode.Rotate;
+						return true;
+					case Keys.S:
+						templateBox.EditMode = EditMode.Scale;
+						return true;
+					case Keys.Delete:
+						templateBox.DeleteSelection();
+						return true;
+				}
+			}
+			return base.ProcessCmdKey(ref message, keys);
+		}
+
 		private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			AboutForm about = new AboutForm();
@@ -322,7 +357,6 @@ namespace LF2.Sprite_Sheet_Generator
 
 		private void MainForm_KeyDown(object sender, KeyEventArgs e)
 		{
-			
 		}
 
 		private void templateBox_EditModeChanged(object sender, EventArgs e)
