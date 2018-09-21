@@ -152,7 +152,7 @@ namespace LF2.Sprite_Sheet_Generator
 			templateBox.ScaleFit();
 		}
 
-		private void toolStripSplitButton_GuideImage_Click(object sender, EventArgs e)
+		private void toolStripMenuItem_LoadFromFile_Click(object sender, EventArgs e)
 		{
 			if (openFileDialog_Image.ShowDialog(this) == DialogResult.OK && File.Exists(openFileDialog_Image.FileName))
 				AdjustGuideImage(Image.FromFile(openFileDialog_Image.FileName));
