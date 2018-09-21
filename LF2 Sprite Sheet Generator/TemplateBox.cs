@@ -918,34 +918,30 @@ namespace LF2.Sprite_Sheet_Generator
 			if ((e.Button & MouseButtons.Middle) != 0)
 				middleMouse = true;
 
-			if (leftMouse)
+			if (leftMouse && !ModifierKeys.HasFlag(Keys.Alt))
 			{
-				if (!ModifierKeys.HasFlag(Keys.Control))
+				if (!ModifierKeys.HasFlag(Keys.Shift))
 					selectedRenders.Clear();
-				if (ModifierKeys.HasFlag(Keys.Shift))
+
+				selectionArea.Location = mouse;
+				selectionArea.Size = Size.Empty;
+
+				int i;
+				if (TrySelectRenderIndexFromLocation(mouse, out i))
 				{
-					selectionArea.Location = mouse;
-					selectionArea.Size = Size.Empty;
-					selecting = true;
+					if (selectedRenders.Contains(i))
+						selectedRenders.Remove(i);
+					else
+						selectedRenders.Add(i);
 				}
-				else
-				{
-					int i;
-					if (TrySelectRenderIndexFromLocation(mouse, out i))
-					{
-						if (selectedRenders.Contains(i))
-							selectedRenders.Remove(i);
-						else
-							selectedRenders.Add(i);
-					}
-				}
+
 				SelectionChanged?.Invoke(this, EventArgs.Empty);
 			}
 			else if (rightMouse)
 			{
 				editStart = GetImageCoordFromMousePosition(mouse);
 			}
-			else if (middleMouse)
+			else if (middleMouse || leftMouse && ModifierKeys.HasFlag(Keys.Alt))
 			{
 				grabStart = e.Location;
 				grabOffset = offset;
@@ -963,12 +959,18 @@ namespace LF2.Sprite_Sheet_Generator
 				base.OnMouseMove(e);
 				mouse = e.Location;
 
-				if (leftMouse)
+				if (leftMouse && !ModifierKeys.HasFlag(Keys.Alt))
 				{
-					if (selecting)
+					Size size = new Size(mouse.Substract(selectionArea.Location));
+					if (!selecting && !size.IsEmpty)
 					{
-						selectionArea.Size = new Size(mouse.Substract(selectionArea.Location));
+						if (!ModifierKeys.HasFlag(Keys.Shift))
+							selectedRenders.Clear();
+						selecting = true;
+						selectionArea.Size = size;
 					}
+					else if (selecting)
+						selectionArea.Size = size;
 				}
 				else if (rightMouse)
 				{
@@ -996,7 +998,6 @@ namespace LF2.Sprite_Sheet_Generator
 								mid2mouse2 = p.Substract(midpoint2),
 								mid2before2 = editStart.Substract(midpoint2);
 							float scaleDiff = (float)(Math.Sqrt(mid2mouse2.X * mid2mouse2.X + mid2mouse2.Y * mid2mouse2.Y) / Math.Sqrt(mid2before2.X * mid2before2.X + mid2before2.Y * mid2before2.Y));
-							Debug.WriteLine(scaleDiff);
 							foreach (int i in selectedRenders)
 							{
 								renders[i].transform.Location = renders[i].transform.Location.ScaleRelativeTo(midpoint2, scaleDiff);
@@ -1007,7 +1008,7 @@ namespace LF2.Sprite_Sheet_Generator
 					editStart = GetImageCoordFromMousePosition(mouse);
 					TransformEdit?.Invoke(this, EventArgs.Empty);
 				}
-				else if (middleMouse)
+				else if (middleMouse || leftMouse && ModifierKeys.HasFlag(Keys.Alt))
 				{
 					Offset = grabOffset.Substract(mouse.Substract(grabStart).toPointF().Divide(zoom));
 				}
