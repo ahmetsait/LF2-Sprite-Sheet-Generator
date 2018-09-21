@@ -348,6 +348,10 @@ namespace LF2.Sprite_Sheet_Generator
 				img.Dispose();
 				templateBox.GuideImage = Image.FromFile(selected);
 			}
+			if ((selected = files.FirstOrDefault((file) => file.EndsWith(".xml"))) != null)
+			{
+				LoadTemplate(selected);
+			}
 		}
 
 		private void MainForm_KeyDown(object sender, KeyEventArgs e)
@@ -590,17 +594,31 @@ namespace LF2.Sprite_Sheet_Generator
 			label_Transparency.Refresh();
 		}
 
+		public void LoadTemplate(string fileName)
+		{
+			using (FileStream settings = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+			{
+				XmlSerializer xs = new XmlSerializer(typeof(Render[]));
+				templateBox.LoadTemplate((Render[])xs.Deserialize(settings));
+			}
+		}
+
+		public void SaveTemplate(string fileName)
+		{
+			using (FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+			{
+				XmlSerializer xs = new XmlSerializer(typeof(Render[]));
+				xs.Serialize(fs, templateBox.Renders.ToArray());
+			}
+		}
+
 		private void button_LoadTemplate_Click(object sender, EventArgs e)
 		{
 			if (openFileDialog_Template.ShowDialog(this) == DialogResult.OK)
 			{
 				try
 				{
-					using (FileStream settings = new FileStream(openFileDialog_Template.FileName, FileMode.Open, FileAccess.Read))
-					{
-						XmlSerializer xs = new XmlSerializer(typeof(Render[]));
-						templateBox.LoadTemplate((Render[])xs.Deserialize(settings));
-					}
+					LoadTemplate(openFileDialog_Template.FileName);
 				}
 				catch (Exception ex)
 				{
@@ -615,11 +633,7 @@ namespace LF2.Sprite_Sheet_Generator
 			{
 				try
 				{
-					using (FileStream fs = new FileStream(saveFileDialog_Template.FileName, FileMode.Create, FileAccess.Write))
-					{
-						XmlSerializer xs = new XmlSerializer(typeof(Render[]));
-						xs.Serialize(fs, templateBox.Renders.ToArray());
-					}
+					SaveTemplate(saveFileDialog_Template.FileName);
 				}
 				catch (Exception ex)
 				{
