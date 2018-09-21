@@ -25,7 +25,8 @@ namespace LF2.Sprite_Sheet_Generator
 			get { return rotation; }
 			set
 			{
-				rotation = (float)Extensions.Mod(value, 360);
+				if (!float.IsInfinity(value) && !float.IsNaN(value))
+					rotation = (float)Extensions.Mod(value, 360);
 			}
 		}
 		private float scale;
