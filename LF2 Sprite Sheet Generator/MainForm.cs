@@ -444,6 +444,7 @@ namespace LF2.Sprite_Sheet_Generator
 				groupBox_Render.Text = "Object";
 				using (var trap = new EditingScope())
 				{
+					textBox_RenderSymbol.Clear();
 					textBox_RenderPosition.Clear();
 					textBox_RenderRotation.Clear();
 					textBox_RenderScale.Clear();
@@ -463,11 +464,14 @@ namespace LF2.Sprite_Sheet_Generator
 			}
 			else if (indices.Length > 1)
 			{
-				bool pos = true, rot = true, sca = true;
 				groupBox_Render.Text = '(' + indices.Length.ToString() + ") Objects";
+				bool sym = true, pos = true, rot = true, sca = true;
+				string symbolName = templateBox.Renders[indices[0]].symbolName;
 				Transform transform = templateBox.Renders[indices[0]].transform;
-				for (int i = 1; i < indices.Length && (pos || rot || sca); i++)
+				for (int i = 1; i < indices.Length && (sym || pos || rot || sca); i++)
 				{
+					if (templateBox.Renders[indices[i]].symbolName != symbolName)
+						sym = false;
 					if (templateBox.Renders[indices[i]].transform.Location != transform.Location)
 						pos = false;
 					if (templateBox.Renders[indices[i]].transform.Rotation != transform.Rotation)
@@ -477,6 +481,10 @@ namespace LF2.Sprite_Sheet_Generator
 				}
 				using (var trap = new EditingScope())
 				{
+					if (sym)
+						textBox_RenderSymbol.Text = symbolName;
+					else
+						textBox_RenderSymbol.Clear();
 					if (pos)
 						textBox_RenderPosition.Text = transform.X.ToString("0.##") + " , " + transform.Y.ToString("0.##");
 					else
@@ -491,6 +499,7 @@ namespace LF2.Sprite_Sheet_Generator
 						textBox_RenderScale.Clear();
 				}
 			}
+			textBox_RenderSymbol.Refresh();
 			textBox_RenderPosition.Refresh();
 			textBox_RenderRotation.Refresh();
 			textBox_RenderScale.Refresh();
@@ -575,11 +584,6 @@ namespace LF2.Sprite_Sheet_Generator
 		private void listBox_Symbols_DoubleClick(object sender, EventArgs e)
 		{
 			AddRender();
-		}
-
-		private void button_Delete_Click(object sender, EventArgs e)
-		{
-			templateBox.DeleteSelection();
 		}
 		
 		private void trackBar_AlphaCut_Scroll(object sender, EventArgs e)
