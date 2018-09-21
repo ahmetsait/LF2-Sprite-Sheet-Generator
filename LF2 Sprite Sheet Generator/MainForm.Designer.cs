@@ -75,22 +75,20 @@
 			this.groupBox_Template = new System.Windows.Forms.GroupBox();
 			this.button_SaveTemplate = new System.Windows.Forms.Button();
 			this.button_LoadTemplate = new System.Windows.Forms.Button();
-			this.groupBox_Object = new System.Windows.Forms.GroupBox();
 			this.button_Delete = new System.Windows.Forms.Button();
-			this.textBox_ObjectPosition = new System.Windows.Forms.TextBox();
+			this.groupBox_Render = new System.Windows.Forms.GroupBox();
+			this.textBox_RenderPosition = new System.Windows.Forms.TextBox();
 			this.label4 = new System.Windows.Forms.Label();
-			this.textBox_ObjectRotation = new System.Windows.Forms.TextBox();
+			this.textBox_RenderRotation = new System.Windows.Forms.TextBox();
 			this.label3 = new System.Windows.Forms.Label();
-			this.textBox_ObjectScale = new System.Windows.Forms.TextBox();
+			this.textBox_RenderScale = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
-			this.drawBox_SpritePart = new LF2.Sprite_Sheet_Generator.DrawBox();
-			this.checkBox_SpritePartsTransparency = new System.Windows.Forms.CheckBox();
 			this.listBox_SpriteParts = new System.Windows.Forms.ListBox();
+			this.drawBox_Symbol = new LF2.Sprite_Sheet_Generator.DrawBox();
+			this.checkBox_RenderTransparency = new System.Windows.Forms.CheckBox();
 			this.button_AddRender = new System.Windows.Forms.Button();
-			this.button_Rename = new System.Windows.Forms.Button();
-			this.button_RemoveSprite = new System.Windows.Forms.Button();
+			this.button_RenameSymbol = new System.Windows.Forms.Button();
 			this.button_MoveDown = new System.Windows.Forms.Button();
-			this.button_AddSprite = new System.Windows.Forms.Button();
 			this.button_MoveUp = new System.Windows.Forms.Button();
 			this.colorDialog = new System.Windows.Forms.ColorDialog();
 			this.openFileDialog_Image = new System.Windows.Forms.OpenFileDialog();
@@ -108,7 +106,6 @@
 			((System.ComponentModel.ISupportInitialize)(this.trackBar_Transparency)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar_AlphaCut)).BeginInit();
 			this.groupBox_Template.SuspendLayout();
-			this.groupBox_Object.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// statusStrip
@@ -224,7 +221,6 @@
 			this.betterToolStripButton_BringToFront.Name = "betterToolStripButton_BringToFront";
 			this.betterToolStripButton_BringToFront.Size = new System.Drawing.Size(26, 26);
 			this.betterToolStripButton_BringToFront.Text = "Bring to Front";
-			this.betterToolStripButton_BringToFront.Click += new System.EventHandler(this.betterToolStripButton_BringToFront_Click);
 			// 
 			// betterToolStripButton_SendToBack
 			// 
@@ -235,7 +231,6 @@
 			this.betterToolStripButton_SendToBack.Name = "betterToolStripButton_SendToBack";
 			this.betterToolStripButton_SendToBack.Size = new System.Drawing.Size(26, 26);
 			this.betterToolStripButton_SendToBack.Text = "Send to Back";
-			this.betterToolStripButton_SendToBack.Click += new System.EventHandler(this.betterToolStripButton_SendToBack_Click);
 			// 
 			// toolStripSeparator2
 			// 
@@ -345,6 +340,7 @@
 			// 
 			this.toolStripMenuItem_AdjustColor.Name = "toolStripMenuItem_AdjustColor";
 			this.toolStripMenuItem_AdjustColor.Size = new System.Drawing.Size(177, 28);
+			this.toolStripMenuItem_AdjustColor.Size = new System.Drawing.Size(183, 28);
 			this.toolStripMenuItem_AdjustColor.Text = "&Adjust Color...";
 			this.toolStripMenuItem_AdjustColor.Click += new System.EventHandler(this.toolStripMenuItem_AdjustColor_Click);
 			// 
@@ -352,6 +348,7 @@
 			// 
 			this.toolStripSplitButton_GuideImage.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.toolStripSplitButton_GuideImage.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem_LoadFromFile,
             this.toolStripMenuItem_CreateEmptyGrid,
             this.toolStripSeparator1,
             this.opacityToolStripMenuItem,
@@ -363,6 +360,8 @@
 			this.toolStripSplitButton_GuideImage.Size = new System.Drawing.Size(41, 26);
 			this.toolStripSplitButton_GuideImage.ToolTipText = "Adjust Guide Image...";
 			this.toolStripSplitButton_GuideImage.ButtonClick += new System.EventHandler(this.toolStripSplitButton_GuideImage_Click);
+			// 
+			// toolStripMenuItem_LoadFromFile
 			// 
 			// toolStripMenuItem_CreateEmptyGrid
 			// 
@@ -551,7 +550,6 @@
 			this.button_SaveSprite.AutoSize = true;
 			this.button_SaveSprite.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.button_SaveSprite.ForeColor = System.Drawing.SystemColors.ControlText;
-			this.button_SaveSprite.Location = new System.Drawing.Point(326, 176);
 			this.button_SaveSprite.Name = "button_SaveSprite";
 			this.button_SaveSprite.Size = new System.Drawing.Size(134, 30);
 			this.button_SaveSprite.TabIndex = 3;
@@ -576,7 +574,7 @@
 			this.button_PreviewSprite.AutoSize = true;
 			this.button_PreviewSprite.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.button_PreviewSprite.ForeColor = System.Drawing.SystemColors.ControlText;
-			this.button_PreviewSprite.Location = new System.Drawing.Point(390, 140);
+			this.button_PreviewSprite.Location = new System.Drawing.Point(389, 140);
 			this.button_PreviewSprite.Name = "button_PreviewSprite";
 			this.button_PreviewSprite.Size = new System.Drawing.Size(70, 30);
 			this.button_PreviewSprite.TabIndex = 3;
@@ -594,6 +592,7 @@
 			this.label5.Size = new System.Drawing.Size(140, 20);
 			this.label5.TabIndex = 1;
 			this.label5.Text = "Transparency range:";
+			this.toolTip.SetToolTip(this.label5, "Pixels with lower luminance value than this setting will be completely invisible");
 			// 
 			// label_AlphaCut
 			// 
@@ -614,6 +613,7 @@
 			this.label2.Size = new System.Drawing.Size(141, 20);
 			this.label2.TabIndex = 1;
 			this.label2.Text = "Alpha cut threshold:";
+			this.toolTip.SetToolTip(this.label2, "Pixels with lower alpha value than this setting will be completely invisible");
 			// 
 			// groupBox_Template
 			// 
@@ -657,7 +657,6 @@
 			this.button_LoadTemplate.UseVisualStyleBackColor = true;
 			this.button_LoadTemplate.Click += new System.EventHandler(this.button_LoadTemplate_Click);
 			// 
-			// groupBox_Object
 			// 
 			this.groupBox_Object.AutoSize = true;
 			this.groupBox_Object.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
@@ -675,6 +674,19 @@
 			this.groupBox_Object.TabIndex = 2;
 			this.groupBox_Object.TabStop = false;
 			this.groupBox_Object.Text = "None";
+			this.groupBox_Render.Controls.Add(this.textBox_RenderPosition);
+			this.groupBox_Render.Controls.Add(this.label4);
+			this.groupBox_Render.Controls.Add(this.label3);
+			this.groupBox_Render.Controls.Add(this.label6);
+			this.groupBox_Render.Controls.Add(this.textBox_RenderScale);
+			this.groupBox_Render.Controls.Add(this.label1);
+			this.groupBox_Render.ForeColor = System.Drawing.Color.Navy;
+			this.groupBox_Render.Location = new System.Drawing.Point(3, 3);
+			this.groupBox_Render.Name = "groupBox_Render";
+			this.groupBox_Render.Size = new System.Drawing.Size(235, 178);
+			this.groupBox_Render.TabIndex = 2;
+			this.groupBox_Render.TabStop = false;
+			this.groupBox_Render.Text = "Object";
 			// 
 			// button_Delete
 			// 
@@ -687,13 +699,15 @@
 			this.button_Delete.Text = "Delete Selection";
 			this.button_Delete.UseVisualStyleBackColor = true;
 			this.button_Delete.Click += new System.EventHandler(this.button_Delete_Click);
+			this.textBox_RenderSymbol.Location = new System.Drawing.Point(81, 26);
+			this.textBox_RenderSymbol.Name = "textBox_RenderSymbol";
+			this.textBox_RenderSymbol.TabIndex = 1;
+			this.textBox_RenderSymbol.TabStop = false;
+			this.textBox_RenderSymbol.TextChanged += new System.EventHandler(this.textBox_RenderSymbol_TextChanged);
+			this.textBox_RenderSymbol.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox_RenderSymbol_KeyDown);
 			// 
-			// textBox_ObjectPosition
+			// textBox_RenderPosition
 			// 
-			this.textBox_ObjectPosition.Location = new System.Drawing.Point(81, 26);
-			this.textBox_ObjectPosition.Name = "textBox_ObjectPosition";
-			this.textBox_ObjectPosition.Size = new System.Drawing.Size(148, 27);
-			this.textBox_ObjectPosition.TabIndex = 0;
 			this.textBox_ObjectPosition.TextChanged += new System.EventHandler(this.textBox_ObjectPosition_TextChanged);
 			this.textBox_ObjectPosition.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox_ObjectPosition_TextChanged);
 			// 
@@ -707,14 +721,18 @@
 			this.label4.TabIndex = 1;
 			this.label4.Text = "Scale:";
 			// 
-			// textBox_ObjectRotation
 			// 
 			this.textBox_ObjectRotation.Location = new System.Drawing.Point(81, 59);
 			this.textBox_ObjectRotation.Name = "textBox_ObjectRotation";
 			this.textBox_ObjectRotation.Size = new System.Drawing.Size(148, 27);
 			this.textBox_ObjectRotation.TabIndex = 0;
 			this.textBox_ObjectRotation.TextChanged += new System.EventHandler(this.textBox_ObjectRotation_TextChanged);
-			this.textBox_ObjectRotation.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox_ObjectRotation_TextChanged);
+			this.textBox_RenderRotation.Location = new System.Drawing.Point(81, 92);
+			this.textBox_RenderRotation.Name = "textBox_RenderRotation";
+			this.textBox_RenderRotation.Size = new System.Drawing.Size(148, 27);
+			this.textBox_RenderRotation.TabIndex = 3;
+			this.textBox_RenderRotation.TextChanged += new System.EventHandler(this.textBox_RenderRotation_TextChanged);
+			this.textBox_RenderRotation.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox_RenderRotation_KeyDown);
 			// 
 			// label3
 			// 
@@ -728,76 +746,89 @@
 			// 
 			// textBox_ObjectScale
 			// 
-			this.textBox_ObjectScale.Location = new System.Drawing.Point(81, 92);
 			this.textBox_ObjectScale.Name = "textBox_ObjectScale";
-			this.textBox_ObjectScale.Size = new System.Drawing.Size(148, 27);
-			this.textBox_ObjectScale.TabIndex = 0;
 			this.textBox_ObjectScale.TextChanged += new System.EventHandler(this.textBox_ObjectScale_TextChanged);
 			this.textBox_ObjectScale.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox_ObjectScale_TextChanged);
+			this.label6.AutoSize = true;
+			this.label6.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.label6.Location = new System.Drawing.Point(11, 29);
+			this.label6.Name = "label6";
+			this.label6.Size = new System.Drawing.Size(62, 20);
+			this.label6.TabIndex = 1;
+			this.label6.Text = "Symbol:";
+			// 
+			// textBox_RenderScale
+			// 
+			this.textBox_RenderScale.Location = new System.Drawing.Point(81, 125);
+			this.textBox_RenderScale.Name = "textBox_RenderScale";
+			this.textBox_RenderScale.Size = new System.Drawing.Size(148, 27);
+			this.textBox_RenderScale.TabIndex = 4;
+			this.textBox_RenderScale.TextChanged += new System.EventHandler(this.textBox_RenderScale_TextChanged);
+			this.textBox_RenderScale.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox_RenderScale_KeyDown);
 			// 
 			// label1
 			// 
 			this.label1.AutoSize = true;
 			this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
-			this.label1.Location = new System.Drawing.Point(11, 29);
+			this.label1.Location = new System.Drawing.Point(11, 62);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(64, 20);
 			this.label1.TabIndex = 1;
 			this.label1.Text = "Position:";
 			// 
-			// drawBox_SpritePart
+			// drawBox_Symbol
 			// 
-			this.drawBox_SpritePart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			this.drawBox_Symbol.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.drawBox_SpritePart.BackgroundImage = global::LF2.Sprite_Sheet_Generator.Properties.Resources.check;
-			this.drawBox_SpritePart.BackgroundInterpolation = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-			this.drawBox_SpritePart.ControlKey = false;
-			this.drawBox_SpritePart.Interpolation = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
-			this.drawBox_SpritePart.Location = new System.Drawing.Point(303, 3);
-			this.drawBox_SpritePart.MultiRectangleMode = false;
-			this.drawBox_SpritePart.Name = "drawBox_SpritePart";
-			this.drawBox_SpritePart.OneRectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
-			this.drawBox_SpritePart.PictureMode = LF2.Sprite_Sheet_Generator.PictureMode.ShrinkOnly;
-			this.drawBox_SpritePart.Rectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
-			this.drawBox_SpritePart.Rectangles = ((System.Collections.Generic.List<System.Drawing.Rectangle>)(resources.GetObject("drawBox_SpritePart.Rectangles")));
-			this.drawBox_SpritePart.ShiftKey = false;
-			this.drawBox_SpritePart.Size = new System.Drawing.Size(172, 170);
-			this.drawBox_SpritePart.TabIndex = 2;
-			this.drawBox_SpritePart.TabStop = false;
-			this.drawBox_SpritePart.Trancparency = true;
+			this.drawBox_Symbol.BackgroundImage = global::LF2.Sprite_Sheet_Generator.Properties.Resources.check;
+			this.drawBox_Symbol.BackgroundInterpolation = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+			this.drawBox_Symbol.ControlKey = false;
+			this.drawBox_Symbol.Interpolation = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
+			this.drawBox_Symbol.Location = new System.Drawing.Point(303, 3);
+			this.drawBox_Symbol.MultiRectangleMode = false;
+			this.drawBox_Symbol.Name = "drawBox_Symbol";
+			this.drawBox_Symbol.OneRectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
+			this.drawBox_Symbol.PictureMode = LF2.Sprite_Sheet_Generator.PictureMode.ShrinkOnly;
+			this.drawBox_Symbol.Rectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
+			this.drawBox_Symbol.Rectangles = ((System.Collections.Generic.List<System.Drawing.Rectangle>)(resources.GetObject("drawBox_Symbol.Rectangles")));
+			this.drawBox_Symbol.ShiftKey = false;
+			this.drawBox_Symbol.Size = new System.Drawing.Size(171, 170);
+			this.drawBox_Symbol.TabIndex = 2;
+			this.drawBox_Symbol.TabStop = false;
+			this.drawBox_Symbol.Trancparency = true;
 			// 
-			// checkBox_SpritePartsTransparency
+			// checkBox_RenderTransparency
 			// 
-			this.checkBox_SpritePartsTransparency.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.checkBox_SpritePartsTransparency.AutoSize = true;
-			this.checkBox_SpritePartsTransparency.Checked = true;
-			this.checkBox_SpritePartsTransparency.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.checkBox_SpritePartsTransparency.Location = new System.Drawing.Point(286, 179);
-			this.checkBox_SpritePartsTransparency.Name = "checkBox_SpritePartsTransparency";
-			this.checkBox_SpritePartsTransparency.Size = new System.Drawing.Size(189, 24);
-			this.checkBox_SpritePartsTransparency.TabIndex = 1;
-			this.checkBox_SpritePartsTransparency.TabStop = false;
-			this.checkBox_SpritePartsTransparency.Text = "Transparent black pixels";
-			this.checkBox_SpritePartsTransparency.UseVisualStyleBackColor = true;
-			this.checkBox_SpritePartsTransparency.CheckedChanged += new System.EventHandler(this.checkBox_SpritePartsTransparency_CheckedChanged);
+			this.checkBox_RenderTransparency.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.checkBox_RenderTransparency.AutoSize = true;
+			this.checkBox_RenderTransparency.Checked = true;
+			this.checkBox_RenderTransparency.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.checkBox_RenderTransparency.Location = new System.Drawing.Point(285, 179);
+			this.checkBox_RenderTransparency.Name = "checkBox_RenderTransparency";
+			this.checkBox_RenderTransparency.Size = new System.Drawing.Size(189, 24);
+			this.checkBox_RenderTransparency.TabIndex = 1;
+			this.checkBox_RenderTransparency.TabStop = false;
+			this.checkBox_RenderTransparency.Text = "Transparent black pixels";
+			this.checkBox_RenderTransparency.UseVisualStyleBackColor = true;
+			this.checkBox_RenderTransparency.CheckedChanged += new System.EventHandler(this.checkBox_SymbolsTransparency_CheckedChanged);
 			// 
-			// listBox_SpriteParts
+			// listBox_Symbols
 			// 
-			this.listBox_SpriteParts.AllowDrop = true;
-			this.listBox_SpriteParts.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			this.listBox_Symbols.AllowDrop = true;
+			this.listBox_Symbols.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-			this.listBox_SpriteParts.FormattingEnabled = true;
-			this.listBox_SpriteParts.ItemHeight = 20;
-			this.listBox_SpriteParts.Location = new System.Drawing.Point(3, 3);
-			this.listBox_SpriteParts.Name = "listBox_SpriteParts";
-			this.listBox_SpriteParts.Size = new System.Drawing.Size(250, 164);
-			this.listBox_SpriteParts.TabIndex = 0;
-			this.listBox_SpriteParts.TabStop = false;
-			this.listBox_SpriteParts.SelectedIndexChanged += new System.EventHandler(this.listBox_SpriteParts_SelectedIndexChanged);
-			this.listBox_SpriteParts.DragDrop += new System.Windows.Forms.DragEventHandler(this.listBox_SpriteParts_DragDrop);
-			this.listBox_SpriteParts.DragEnter += new System.Windows.Forms.DragEventHandler(this.listBox_SpriteParts_DragEnter);
-			this.listBox_SpriteParts.DoubleClick += new System.EventHandler(this.listBox_SpriteParts_DoubleClick);
+			this.listBox_Symbols.FormattingEnabled = true;
+			this.listBox_Symbols.ItemHeight = 20;
+			this.listBox_Symbols.Location = new System.Drawing.Point(3, 3);
+			this.listBox_Symbols.Name = "listBox_Symbols";
+			this.listBox_Symbols.Size = new System.Drawing.Size(250, 164);
+			this.listBox_Symbols.TabIndex = 0;
+			this.listBox_Symbols.TabStop = false;
+			this.listBox_Symbols.SelectedIndexChanged += new System.EventHandler(this.listBox_Symbols_SelectedIndexChanged);
+			this.listBox_Symbols.DragDrop += new System.Windows.Forms.DragEventHandler(this.listBox_Symbols_DragDrop);
+			this.listBox_Symbols.DragEnter += new System.Windows.Forms.DragEventHandler(this.listBox_Symbols_DragEnter);
+			this.listBox_Symbols.DoubleClick += new System.EventHandler(this.listBox_Symbols_DoubleClick);
 			// 
 			// button_AddRender
 			// 
@@ -807,35 +838,35 @@
 			this.button_AddRender.Size = new System.Drawing.Size(142, 30);
 			this.button_AddRender.TabIndex = 3;
 			this.button_AddRender.TabStop = false;
-			this.button_AddRender.Text = "Add Object";
+			this.button_AddRender.Text = "< Add Symbol";
 			this.button_AddRender.UseVisualStyleBackColor = true;
-			this.button_AddRender.Click += new System.EventHandler(this.listBox_SpriteParts_DoubleClick);
+			this.button_AddRender.Click += new System.EventHandler(this.listBox_Symbols_DoubleClick);
 			// 
-			// button_Rename
+			// button_RenameSymbol
 			// 
-			this.button_Rename.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.button_Rename.Location = new System.Drawing.Point(3, 173);
-			this.button_Rename.Name = "button_Rename";
-			this.button_Rename.Size = new System.Drawing.Size(80, 30);
-			this.button_Rename.TabIndex = 3;
-			this.button_Rename.TabStop = false;
-			this.button_Rename.Text = "Rename";
-			this.button_Rename.UseVisualStyleBackColor = true;
-			this.button_Rename.Click += new System.EventHandler(this.button_Rename_Click);
+			this.button_RenameSymbol.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.button_RenameSymbol.Location = new System.Drawing.Point(173, 173);
+			this.button_RenameSymbol.Name = "button_RenameSymbol";
+			this.button_RenameSymbol.Size = new System.Drawing.Size(80, 30);
+			this.button_RenameSymbol.TabIndex = 3;
+			this.button_RenameSymbol.TabStop = false;
+			this.button_RenameSymbol.Text = "Rename";
+			this.button_RenameSymbol.UseVisualStyleBackColor = true;
+			this.button_RenameSymbol.Click += new System.EventHandler(this.button_RenameSymbol_Click);
 			// 
-			// button_RemoveSprite
+			// button_RemoveSymbol
 			// 
-			this.button_RemoveSprite.AutoSize = true;
-			this.button_RemoveSprite.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.button_RemoveSprite.BackColor = System.Drawing.SystemColors.ButtonFace;
-			this.button_RemoveSprite.Image = global::LF2.Sprite_Sheet_Generator.Properties.Resources.minus;
-			this.button_RemoveSprite.Location = new System.Drawing.Point(259, 47);
-			this.button_RemoveSprite.Name = "button_RemoveSprite";
-			this.button_RemoveSprite.Size = new System.Drawing.Size(38, 38);
-			this.button_RemoveSprite.TabIndex = 3;
-			this.button_RemoveSprite.TabStop = false;
-			this.button_RemoveSprite.UseVisualStyleBackColor = false;
-			this.button_RemoveSprite.Click += new System.EventHandler(this.button_RemoveSprite_Click);
+			this.button_RemoveSymbol.AutoSize = true;
+			this.button_RemoveSymbol.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.button_RemoveSymbol.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.button_RemoveSymbol.Image = global::LF2.Sprite_Sheet_Generator.Properties.Resources.minus;
+			this.button_RemoveSymbol.Location = new System.Drawing.Point(259, 47);
+			this.button_RemoveSymbol.Name = "button_RemoveSymbol";
+			this.button_RemoveSymbol.Size = new System.Drawing.Size(38, 38);
+			this.button_RemoveSymbol.TabIndex = 3;
+			this.button_RemoveSymbol.TabStop = false;
+			this.button_RemoveSymbol.UseVisualStyleBackColor = false;
+			this.button_RemoveSymbol.Click += new System.EventHandler(this.button_RemoveSymbol_Click);
 			// 
 			// button_MoveDown
 			// 
@@ -851,19 +882,19 @@
 			this.button_MoveDown.UseVisualStyleBackColor = false;
 			this.button_MoveDown.Click += new System.EventHandler(this.button_MoveDown_Click);
 			// 
-			// button_AddSprite
+			// button_AddSymbol
 			// 
-			this.button_AddSprite.AutoSize = true;
-			this.button_AddSprite.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.button_AddSprite.BackColor = System.Drawing.SystemColors.ButtonFace;
-			this.button_AddSprite.Image = global::LF2.Sprite_Sheet_Generator.Properties.Resources.plus;
-			this.button_AddSprite.Location = new System.Drawing.Point(259, 3);
-			this.button_AddSprite.Name = "button_AddSprite";
-			this.button_AddSprite.Size = new System.Drawing.Size(38, 38);
-			this.button_AddSprite.TabIndex = 3;
-			this.button_AddSprite.TabStop = false;
-			this.button_AddSprite.UseVisualStyleBackColor = false;
-			this.button_AddSprite.Click += new System.EventHandler(this.button_AddSprite_Click);
+			this.button_AddSymbol.AutoSize = true;
+			this.button_AddSymbol.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.button_AddSymbol.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.button_AddSymbol.Image = global::LF2.Sprite_Sheet_Generator.Properties.Resources.plus;
+			this.button_AddSymbol.Location = new System.Drawing.Point(259, 3);
+			this.button_AddSymbol.Name = "button_AddSymbol";
+			this.button_AddSymbol.Size = new System.Drawing.Size(38, 38);
+			this.button_AddSymbol.TabIndex = 3;
+			this.button_AddSymbol.TabStop = false;
+			this.button_AddSymbol.UseVisualStyleBackColor = false;
+			this.button_AddSymbol.Click += new System.EventHandler(this.button_AddSymbol_Click);
 			// 
 			// button_MoveUp
 			// 
@@ -946,8 +977,8 @@
 			((System.ComponentModel.ISupportInitialize)(this.trackBar_AlphaCut)).EndInit();
 			this.groupBox_Template.ResumeLayout(false);
 			this.groupBox_Template.PerformLayout();
-			this.groupBox_Object.ResumeLayout(false);
-			this.groupBox_Object.PerformLayout();
+			this.groupBox_Render.ResumeLayout(false);
+			this.groupBox_Render.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -964,10 +995,10 @@
 		private BetterToolStripMenuItem toolStripMenuItem_Color;
 		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_AdjustColor;
 		private System.Windows.Forms.ColorDialog colorDialog;
-		private System.Windows.Forms.CheckBox checkBox_SpritePartsTransparency;
-		private System.Windows.Forms.ListBox listBox_SpriteParts;
+		private System.Windows.Forms.CheckBox checkBox_RenderTransparency;
+		private System.Windows.Forms.ListBox listBox_Symbols;
 		private BetterToolStripButton toolStripButton_Transparency;
-		private DrawBox drawBox_SpritePart;
+		private DrawBox drawBox_Symbol;
 		private System.Windows.Forms.OpenFileDialog openFileDialog_Image;
 		private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel4;
 		private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_Offset;
@@ -983,9 +1014,9 @@
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
 		private System.Windows.Forms.Button button_MoveDown;
 		private System.Windows.Forms.Button button_MoveUp;
-		private System.Windows.Forms.Button button_RemoveSprite;
-		private System.Windows.Forms.Button button_AddSprite;
-		private System.Windows.Forms.Button button_Rename;
+		private System.Windows.Forms.Button button_RemoveSymbol;
+		private System.Windows.Forms.Button button_AddSymbol;
+		private System.Windows.Forms.Button button_RenameSymbol;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
 		private BetterToolStripButton betterToolStripButton_BringToFront;
 		private BetterToolStripButton betterToolStripButton_SendToBack;
@@ -999,12 +1030,12 @@
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.TextBox textBox_ObjectScale;
-		private System.Windows.Forms.TextBox textBox_ObjectRotation;
-		private System.Windows.Forms.TextBox textBox_ObjectPosition;
+		private System.Windows.Forms.TextBox textBox_RenderScale;
+		private System.Windows.Forms.TextBox textBox_RenderRotation;
+		private System.Windows.Forms.TextBox textBox_RenderPosition;
 		private System.Windows.Forms.Button button_AddRender;
-		private System.Windows.Forms.GroupBox groupBox_Object;
 		private System.Windows.Forms.Button button_Delete;
+		private System.Windows.Forms.GroupBox groupBox_Render;
 		private System.Windows.Forms.SaveFileDialog saveFileDialog_Sprite;
 		private System.Windows.Forms.SaveFileDialog saveFileDialog_Template;
 		private System.Windows.Forms.GroupBox groupBox_Sprite;
