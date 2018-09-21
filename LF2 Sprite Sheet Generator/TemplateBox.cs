@@ -222,13 +222,13 @@ namespace LF2.Sprite_Sheet_Generator
 					imageAttr.ClearColorKey(ColorAdjustType.Bitmap);
 				this.Invalidate();
 
-				if (old != value && TrancparencyChanged != null)
+				if (old != value && TransparencyChanged != null)
 				{
-					TrancparencyChanged(this, EventArgs.Empty);
+					TransparencyChanged(this, EventArgs.Empty);
 				}
 			}
 		}
-		public event EventHandler TrancparencyChanged;
+		public event EventHandler TransparencyChanged;
 
 		Color transparencyKey = Color.Black;
 		[DefaultValue(typeof(Color), "Black")]
@@ -599,7 +599,7 @@ namespace LF2.Sprite_Sheet_Generator
 
 		public virtual bool TryGetImageFromSpriteName(string spriteName, out Image image, bool missingSafe = true)
 		{
-			if (!Sprites.TryGetValue(spriteName, out image) || image == null)
+			if (spriteName == null || !Sprites.TryGetValue(spriteName, out image) || image == null)
 			{
 				if (missingImage != null && missingSafe)
 				{
@@ -607,7 +607,10 @@ namespace LF2.Sprite_Sheet_Generator
 					return true;
 				}
 				else
+				{
+					image = null;
 					return false;
+				}
 			}
 			else
 				return true;
