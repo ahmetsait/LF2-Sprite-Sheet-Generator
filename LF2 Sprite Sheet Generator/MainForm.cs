@@ -533,15 +533,18 @@ namespace LF2.Sprite_Sheet_Generator
 			templateBox.Invalidate();
 		}
 
+		private void UpdateRenderRotation()
 		{
 			if (Editing)
 				return;
 			float r;
 			if (!float.TryParse(textBox_RenderRotation.Text.Trim(), out r))
 				return;
+			PointF midPoint = templateBox.GetMidPointOfSelection();
 			foreach (int index in templateBox.SelectedRenders)
 			{
-				templateBox.Renders[index].transform.Location = templateBox.Renders[index].transform.Location.RotateRelativeTo(templateBox.GetMidPointOfSelection(), r);
+				Transform transform = templateBox.Renders[index].transform;
+				templateBox.Renders[index].transform.Location = transform.Location.RotateRelativeTo(midPoint, (float)Extensions.Degree2Radian(r - transform.Rotation));
 				templateBox.Renders[index].transform.Rotation = r;
 			}
 			templateBox.Invalidate();
@@ -554,9 +557,12 @@ namespace LF2.Sprite_Sheet_Generator
 			float s;
 			if (!float.TryParse(textBox_RenderScale.Text.Trim(), out s))
 				return;
+			PointF midPoint = templateBox.GetMidPointOfSelection();
 			foreach (int index in templateBox.SelectedRenders)
 			{
-				templateBox.Renders[index].transform.Location = templateBox.Renders[index].transform.Location.ScaleRelativeTo(templateBox.GetMidPointOfSelection(), s);
+				Transform transform = templateBox.Renders[index].transform;
+				if (s != 0 && transform.Scale != 0)
+					templateBox.Renders[index].transform.Location = transform.Location.ScaleRelativeTo(midPoint, s / transform.Scale);
 				templateBox.Renders[index].transform.Scale = s;
 			}
 			templateBox.Invalidate();
