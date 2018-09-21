@@ -36,6 +36,8 @@ namespace LF2.Sprite_Sheet_Generator
 			this.transform = transform;
 		}
 
+		public Render Clone() => (Render)this.MemberwiseClone();
+
 		/// For backwards compatiblity
 		[XmlAttribute]
 		public string spriteName { get { return symbolName; } set { symbolName = value; } }
@@ -570,6 +572,24 @@ namespace LF2.Sprite_Sheet_Generator
 				{
 					renders.RemoveAt(indices[i]);
 					selectedRenders.Remove(indices[i]);
+				}
+				RendersChanged?.Invoke(this, EventArgs.Empty);
+				SelectionChanged?.Invoke(this, EventArgs.Empty);
+				this.Invalidate();
+			}
+		}
+
+		public virtual void DuplicateSelection()
+		{
+			if (selectedRenders.Count > 0)
+			{
+				int[] indices = selectedRenders.ToArray();
+				Array.Sort(indices);
+				for (int i = 0; i < indices.Length; i++)
+				{
+					renders.Add(renders[indices[i]].Clone());
+					selectedRenders.Remove(indices[i]);
+					selectedRenders.Add(renders.Count - 1);
 				}
 				RendersChanged?.Invoke(this, EventArgs.Empty);
 				SelectionChanged?.Invoke(this, EventArgs.Empty);
