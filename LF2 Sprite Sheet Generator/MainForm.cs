@@ -179,16 +179,16 @@ namespace LF2.Sprite_Sheet_Generator
 
 		string[] imageFilter = { ".bmp", ".dib", ".png", ".jpg", ".jpeg", ".jpe", ".jfif", ".gif", ".emf", ".tif", ".tiff", ".wmf" };
 
-		public void AddSprite(string file)
+		public void AddSymbol(string file)
 		{
 			try
 			{
 				if (imageFilter.Any((ext) => file.EndsWith(ext)))
 				{
-					string name = GetUniqueSpriteName(Path.GetFileNameWithoutExtension(file));
+					string name = GetUniqueSymbolName(Path.GetFileNameWithoutExtension(file));
 					Image img = Image.FromFile(file);
 
-					listBox_SpriteParts.Items.Add(name);
+					listBox_Symbols.Items.Add(name);
 					templateBox.Sprites.Add(name, img);
 				}
 			}
@@ -198,14 +198,14 @@ namespace LF2.Sprite_Sheet_Generator
 			}
 		}
 
-		public void AddSprites(string[] files)
+		public void AddSymbols(string[] files)
 		{
 			foreach (string file in files)
-				AddSprite(file);
+				AddSymbol(file);
 			templateBox.Invalidate();
 		}
 
-		public string GetUniqueSpriteName(string name)
+		public string GetUniqueSymbolName(string name)
 		{
 			if (!templateBox.Sprites.ContainsKey(name))
 				return name;
@@ -217,80 +217,80 @@ namespace LF2.Sprite_Sheet_Generator
 			}
 		}
 
-		private void button_AddSprite_Click(object sender, EventArgs e)
+		private void button_AddSymbol_Click(object sender, EventArgs e)
 		{
 			if (openFileDialog_Image.ShowDialog(this) == DialogResult.OK)
 			{
-				AddSprites(openFileDialog_Image.FileNames);
+				AddSymbols(openFileDialog_Image.FileNames);
 			}
 		}
 		
-		private void button_RemoveSprite_Click(object sender, EventArgs e)
+		private void button_RemoveSymbol_Click(object sender, EventArgs e)
 		{
-			if (listBox_SpriteParts.SelectedIndex >= 0)
+			if (listBox_Symbols.SelectedIndex >= 0)
 			{
-				var index = listBox_SpriteParts.SelectedIndex;
-				templateBox.Sprites.Remove(listBox_SpriteParts.SelectedItem as string);
-				listBox_SpriteParts.Items.RemoveAt(listBox_SpriteParts.SelectedIndex);
-				if (listBox_SpriteParts.Items.Count > 0)
-					listBox_SpriteParts.SelectedIndex = index.Clamp(0, listBox_SpriteParts.Items.Count - 1);
+				var index = listBox_Symbols.SelectedIndex;
+				templateBox.Sprites.Remove(listBox_Symbols.SelectedItem as string);
+				listBox_Symbols.Items.RemoveAt(listBox_Symbols.SelectedIndex);
+				if (listBox_Symbols.Items.Count > 0)
+					listBox_Symbols.SelectedIndex = index.Clamp(0, listBox_Symbols.Items.Count - 1);
 				templateBox.Invalidate();
 			}
 		}
 
 		private void button_MoveUp_Click(object sender, EventArgs e)
 		{
-			if (listBox_SpriteParts.SelectedIndex >= 0)
+			if (listBox_Symbols.SelectedIndex >= 0)
 			{
-				int index = listBox_SpriteParts.SelectedIndex, newIndex = (index - 1).Clamp(0, listBox_SpriteParts.Items.Count - 1);
-				object item = listBox_SpriteParts.SelectedItem;
+				int index = listBox_Symbols.SelectedIndex, newIndex = (index - 1).Clamp(0, listBox_Symbols.Items.Count - 1);
+				object item = listBox_Symbols.SelectedItem;
 				if (newIndex != index)
 				{
-					var temp = listBox_SpriteParts.Items[newIndex];
-					listBox_SpriteParts.Items[newIndex] = listBox_SpriteParts.Items[index];
-					listBox_SpriteParts.Items[index] = temp;
-					listBox_SpriteParts.SelectedIndex = newIndex;
-					listBox_SpriteParts.Refresh();
+					var temp = listBox_Symbols.Items[newIndex];
+					listBox_Symbols.Items[newIndex] = listBox_Symbols.Items[index];
+					listBox_Symbols.Items[index] = temp;
+					listBox_Symbols.SelectedIndex = newIndex;
+					listBox_Symbols.Refresh();
 				}
 			}
 		}
 
 		private void button_MoveDown_Click(object sender, EventArgs e)
 		{
-			if (listBox_SpriteParts.SelectedIndex >= 0)
+			if (listBox_Symbols.SelectedIndex >= 0)
 			{
-				int index = listBox_SpriteParts.SelectedIndex, newIndex = (index + 1).Clamp(0, listBox_SpriteParts.Items.Count - 1);
-				object item = listBox_SpriteParts.SelectedItem;
+				int index = listBox_Symbols.SelectedIndex, newIndex = (index + 1).Clamp(0, listBox_Symbols.Items.Count - 1);
+				object item = listBox_Symbols.SelectedItem;
 				if (newIndex != index)
 				{
-					var temp = listBox_SpriteParts.Items[newIndex];
-					listBox_SpriteParts.Items[newIndex] = listBox_SpriteParts.Items[index];
-					listBox_SpriteParts.Items[index] = temp;
-					listBox_SpriteParts.SelectedIndex = newIndex;
-					listBox_SpriteParts.Refresh();
+					var temp = listBox_Symbols.Items[newIndex];
+					listBox_Symbols.Items[newIndex] = listBox_Symbols.Items[index];
+					listBox_Symbols.Items[index] = temp;
+					listBox_Symbols.SelectedIndex = newIndex;
+					listBox_Symbols.Refresh();
 				}
 			}
 		}
 
-		private void listBox_SpriteParts_SelectedIndexChanged(object sender, EventArgs e)
+		private void listBox_Symbols_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			if (listBox_SpriteParts.SelectedIndex >= 0)
+			if (listBox_Symbols.SelectedIndex >= 0)
 			{
-				drawBox_SpritePart.Image = templateBox.Sprites[listBox_SpriteParts.SelectedItem as string];
-				drawBox_SpritePart.Refresh();
+				drawBox_Symbol.Image = templateBox.Sprites[listBox_Symbols.SelectedItem as string];
+				drawBox_Symbol.Refresh();
 			}
 		}
 
-		private void checkBox_SpritePartsTransparency_CheckedChanged(object sender, EventArgs e)
+		private void checkBox_SymbolsTransparency_CheckedChanged(object sender, EventArgs e)
 		{
-			templateBox.Transparency = drawBox_SpritePart.Trancparency = checkBox_SpritePartsTransparency.Checked;
+			templateBox.Transparency = drawBox_Symbol.Trancparency = checkBox_RenderTransparency.Checked;
 		}
 
-		private void button_Rename_Click(object sender, EventArgs e)
+		private void button_RenameSymbol_Click(object sender, EventArgs e)
 		{
-			if (listBox_SpriteParts.SelectedIndex >= 0)
+			if (listBox_Symbols.SelectedIndex >= 0)
 			{
-				string name = (string)listBox_SpriteParts.SelectedItem, newName;
+				string name = (string)listBox_Symbols.SelectedItem, newName;
 				Form_Rename fr = new Form_Rename(name);
 				do
 				{
@@ -302,38 +302,33 @@ namespace LF2.Sprite_Sheet_Generator
 				while (templateBox.Sprites.ContainsKey(newName));
 				templateBox.Sprites[newName] = templateBox.Sprites[name];
 				templateBox.Sprites.Remove(name);
-				listBox_SpriteParts.SelectedItem = newName;
+				listBox_Symbols.SelectedItem = newName;
 				templateBox.Invalidate();
 			}
 		}
 
 		private void AddRender()
 		{
-			if (listBox_SpriteParts.SelectedIndex >= 0)
+			if (listBox_Symbols.SelectedIndex >= 0)
 			{
 				templateBox.AddRender(
-					(string)listBox_SpriteParts.SelectedItem,
+					(string)listBox_Symbols.SelectedItem,
 					new Transform() { Location = templateBox.Offset, Scale = 1, Rotation = 0 }
 				);
 				templateBox.Refresh();
 			}
 		}
 
-		private void listBox_SpriteParts_MouseDoubleClick(object sender, MouseEventArgs e)
-		{
-			
-		}
-
-		private void listBox_SpriteParts_DragEnter(object sender, DragEventArgs e)
+		private void listBox_Symbols_DragEnter(object sender, DragEventArgs e)
 		{
 			if (e.Data.GetDataPresent(DataFormats.FileDrop))
 				e.Effect = DragDropEffects.Copy;
 		}
 
-		private void listBox_SpriteParts_DragDrop(object sender, DragEventArgs e)
+		private void listBox_Symbols_DragDrop(object sender, DragEventArgs e)
 		{
 			string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-			AddSprites(files);
+			AddSymbols(files);
 		}
 
 		private void templateBox_DragEnter(object sender, DragEventArgs e)
@@ -381,12 +376,12 @@ namespace LF2.Sprite_Sheet_Generator
 			}
 		}
 
-		private void betterToolStripButton_BringToFront_Click(object sender, EventArgs e)
+		private void toolStripButton_BringToFront_Click(object sender, EventArgs e)
 		{
 			templateBox.BringSelectionToFront();
 		}
 
-		private void betterToolStripButton_SendToBack_Click(object sender, EventArgs e)
+		private void toolStripButton_SendToBack_Click(object sender, EventArgs e)
 		{
 			templateBox.SendSelectionToBack();
 		}
@@ -442,18 +437,18 @@ namespace LF2.Sprite_Sheet_Generator
 			Array.Sort(indices);
 			if (indices.Length == 0)
 			{
-				groupBox_Object.Text = "None";
+				groupBox_Render.Text = "Object";
 				using (var trap = new EditingScope())
 				{
-					textBox_ObjectPosition.Clear();
-					textBox_ObjectRotation.Clear();
-					textBox_ObjectScale.Clear();
+					textBox_RenderPosition.Clear();
+					textBox_RenderRotation.Clear();
+					textBox_RenderScale.Clear();
 				}
 			}
 			else if (indices.Length == 1)
 			{
+				groupBox_Render.Text = "Object";
 				var render = templateBox.Renders[indices[0]];
-				groupBox_Object.Text = render.spriteName;
 				using (var trap = new EditingScope())
 				{
 					textBox_RenderSymbol.Text = render.symbolName;
@@ -464,8 +459,8 @@ namespace LF2.Sprite_Sheet_Generator
 			}
 			else if (indices.Length > 1)
 			{
-				groupBox_Object.Text = '(' + indices.Length.ToString() + ") Objects";
 				bool pos = true, rot = true, sca = true;
+				groupBox_Render.Text = '(' + indices.Length.ToString() + ") Objects";
 				Transform transform = templateBox.Renders[indices[0]].transform;
 				for (int i = 1; i < indices.Length && (pos || rot || sca); i++)
 				{
@@ -481,28 +476,39 @@ namespace LF2.Sprite_Sheet_Generator
 					if (pos)
 						textBox_RenderPosition.Text = transform.X.ToString("0.##") + " , " + transform.Y.ToString("0.##");
 					else
-						textBox_ObjectPosition.Clear();
+						textBox_RenderPosition.Clear();
 					if (rot)
-						textBox_ObjectRotation.Text = transform.Rotation.ToString("F2");
+						textBox_RenderRotation.Text = transform.Rotation.ToString("0.####");
 					else
-						textBox_ObjectRotation.Clear();
+						textBox_RenderRotation.Clear();
 					if (sca)
-						textBox_ObjectScale.Text = transform.Scale.ToString("F2");
+						textBox_RenderScale.Text = transform.Scale.ToString("0.####");
 					else
-						textBox_ObjectScale.Clear();
+						textBox_RenderScale.Clear();
 				}
 			}
-			textBox_ObjectPosition.Refresh();
-			textBox_ObjectRotation.Refresh();
-			textBox_ObjectScale.Refresh();
+			textBox_RenderPosition.Refresh();
+			textBox_RenderRotation.Refresh();
+			textBox_RenderScale.Refresh();
 		}
 
-		private void textBox_ObjectPosition_TextChanged(object sender, EventArgs e)
+		private void UpdateRenderSymbol()
+		{
+			if (Editing)
+				return;
+
+			string symbolName = textBox_RenderSymbol.Text.Trim();
+			foreach (int index in templateBox.SelectedRenders)
+				templateBox.Renders[index].symbolName = symbolName;
+			templateBox.Invalidate();
+		}
+
+		private void UpdateRenderPosition()
 		{
 			if (Editing)
 				return;
 			float x, y;
-			string[] parts = textBox_ObjectPosition.Text.Split(',');
+			string[] parts = textBox_RenderPosition.Text.Split(',');
 			if (parts.Length != 2
 				|| !float.TryParse(parts[0].Trim(), out x)
 				|| !float.TryParse(parts[1].Trim(), out y))
@@ -514,12 +520,11 @@ namespace LF2.Sprite_Sheet_Generator
 			templateBox.Invalidate();
 		}
 
-		private void textBox_ObjectRotation_TextChanged(object sender, EventArgs e)
 		{
 			if (Editing)
 				return;
 			float r;
-			if (!float.TryParse(textBox_ObjectRotation.Text.Trim(), out r))
+			if (!float.TryParse(textBox_RenderRotation.Text.Trim(), out r))
 				return;
 			foreach (int index in templateBox.SelectedRenders)
 			{
@@ -529,12 +534,12 @@ namespace LF2.Sprite_Sheet_Generator
 			templateBox.Invalidate();
 		}
 
-		private void textBox_ObjectScale_TextChanged(object sender, EventArgs e)
+		private void UpdateRenderScale()
 		{
 			if (Editing)
 				return;
 			float s;
-			if (!float.TryParse(textBox_ObjectScale.Text.Trim(), out s))
+			if (!float.TryParse(textBox_RenderScale.Text.Trim(), out s))
 				return;
 			foreach (int index in templateBox.SelectedRenders)
 			{
@@ -544,7 +549,26 @@ namespace LF2.Sprite_Sheet_Generator
 			templateBox.Invalidate();
 		}
 
-		private void listBox_SpriteParts_DoubleClick(object sender, EventArgs e)
+
+		private void textBox_RenderSymbol_KeyDown(object sender, KeyEventArgs e) => UpdateRenderSymbol();
+
+		private void textBox_RenderPosition_KeyDown(object sender, KeyEventArgs e) => UpdateRenderPosition();
+
+		private void textBox_RenderRotation_KeyDown(object sender, KeyEventArgs e) => UpdateRenderRotation();
+
+		private void textBox_RenderScale_KeyDown(object sender, KeyEventArgs e) => UpdateRenderScale();
+
+
+		private void textBox_RenderSymbol_TextChanged(object sender, EventArgs e) => UpdateRenderSymbol();
+
+		private void textBox_RenderPosition_TextChanged(object sender, EventArgs e) => UpdateRenderPosition();
+
+		private void textBox_RenderRotation_TextChanged(object sender, EventArgs e) => UpdateRenderRotation();
+
+		private void textBox_RenderScale_TextChanged(object sender, EventArgs e) => UpdateRenderScale();
+
+
+		private void listBox_Symbols_DoubleClick(object sender, EventArgs e)
 		{
 			AddRender();
 		}
