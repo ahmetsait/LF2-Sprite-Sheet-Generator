@@ -25,16 +25,20 @@ namespace LF2.Sprite_Sheet_Generator
 	public class Render
 	{
 		[XmlAttribute]
-		public string spriteName;
+		public string symbolName;
 		public Transform transform;
 
 		public Render() { }
 
-		public Render(string spriteName, Transform transform)
+		public Render(string symbolName, Transform transform)
 		{
-			this.spriteName = spriteName;
+			this.symbolName = symbolName;
 			this.transform = transform;
 		}
+
+		/// For backwards compatiblity
+		[XmlAttribute]
+		public string spriteName { get { return symbolName; } set { symbolName = value; } }
 	}
 	
 	public class TemplateBox : Control
@@ -465,7 +469,7 @@ namespace LF2.Sprite_Sheet_Generator
 					if (render.transform.Scale == 0f)
 						continue;
 					Image sprite;
-					if (TryGetImageFromSpriteName(render.spriteName, out sprite, false))
+					if (TryGetImageFromSpriteName(render.symbolName, out sprite, false))
 					{
 						using (sprite = ((Image)sprite.Clone()))
 						{
@@ -599,7 +603,7 @@ namespace LF2.Sprite_Sheet_Generator
 				Point diff = location.Substract(p).Divide(zoom);
 				long squareDistance = (long)diff.X * diff.X + (long)diff.Y * diff.Y;
 				Image image;
-				if (TryGetImageFromSpriteName(renders[i].spriteName, out image))
+				if (TryGetImageFromSpriteName(renders[i].symbolName, out image))
 				{
 					long radius = (long)(Math.Min(image.Width, image.Height) * renders[i].transform.Scale / 2);
 					if (squareDistance <= radius * radius)
@@ -755,7 +759,7 @@ namespace LF2.Sprite_Sheet_Generator
 			{
 				if (render.transform.Scale == 0f)
 					continue;
-				if (TryGetImageFromSpriteName(render.spriteName, out sprite))
+				if (TryGetImageFromSpriteName(render.symbolName, out sprite))
 				{
 					e.Graphics.TranslateTransform(ImageBounds.X, ImageBounds.Y);
 					e.Graphics.ScaleTransform(zoom, zoom);
@@ -780,7 +784,7 @@ namespace LF2.Sprite_Sheet_Generator
 					Render render = renders[select];
 					if (render.transform.Scale == 0f)
 						continue;
-					if (TryGetImageFromSpriteName(render.spriteName, out sprite))
+					if (TryGetImageFromSpriteName(render.symbolName, out sprite))
 					{
 						long radius = (long)(Math.Min(sprite.Width, sprite.Height) * render.transform.Scale * zoom / 2);
 						Point p = render.transform.Location.Multiply(zoom).Add(ImageBounds.Location).toPoint();
@@ -808,7 +812,7 @@ namespace LF2.Sprite_Sheet_Generator
 				{
 					if (render.transform.Scale == 0f)
 						continue;
-					if (TryGetImageFromSpriteName(render.spriteName, out sprite))
+					if (TryGetImageFromSpriteName(render.symbolName, out sprite))
 					{
 						long radius = (long)(Math.Min(sprite.Width, sprite.Height) * render.transform.Scale * zoom / 2);
 						Point p = render.transform.Location.Multiply(zoom).Add(ImageBounds.Location).toPoint();
@@ -830,7 +834,7 @@ namespace LF2.Sprite_Sheet_Generator
 				Render render;
 				if (TrySelectRenderFromLocation(mouse, out render))
 				{
-					if (render.transform.Scale != 0f && TryGetImageFromSpriteName(render.spriteName, out sprite))
+					if (render.transform.Scale != 0f && TryGetImageFromSpriteName(render.symbolName, out sprite))
 					{
 						long radius = (long)(Math.Min(sprite.Width, sprite.Height) * render.transform.Scale * zoom / 2);
 						Point p = render.transform.Location.Multiply(zoom).Add(ImageBounds.Location).toPoint();
