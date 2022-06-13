@@ -1,11 +1,13 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Xml.Serialization;
 
-namespace LF2.Sprite_Sheet_Generator
+namespace NX.Graphics
 {
-	[Serializable]
-	public struct Transform
+	[StructLayout(LayoutKind.Sequential), Serializable]
+	public struct Transform : IEquatable<Transform>
 	{
 		private PointF location;
 		[XmlIgnore]
@@ -19,7 +21,7 @@ namespace LF2.Sprite_Sheet_Generator
 		[XmlAttribute]
 		public float Y { get { return location.Y; } set { location.Y = value; } }
 		private float rotation;
-		[XmlAttribute]
+		[XmlAttribute, DefaultValue(0f)]
 		public float Rotation
 		{
 			get { return rotation; }
@@ -30,7 +32,7 @@ namespace LF2.Sprite_Sheet_Generator
 			}
 		}
 		private float scale;
-		[XmlAttribute]
+		[XmlAttribute, DefaultValue(1f)]
 		public float Scale
 		{
 			get { return scale; }
@@ -41,32 +43,22 @@ namespace LF2.Sprite_Sheet_Generator
 			}
 		}
 
-		public override string ToString()
-		{
-			return "Location: " + X + "," + Y + "  Rotation: " + Rotation + "  Scale: " + Scale;
-		}
+		public override string ToString() => "Location: " + X + "," + Y + "  Rotation: " + rotation + "  Scale: " + scale;
+
+		public bool Equals(Transform obj) => ((Location == obj.Location) && (rotation == obj.rotation) && (Scale == obj.Scale));
 
 		public override bool Equals(object obj)
 		{
-			if (!(obj is Transform)) return false;
-			Transform other = (Transform)obj;
-
-			return (((Location == other.Location) && (Rotation == other.Rotation)) && (Scale == other.Scale));
+			if (obj is Transform)
+				return this.Equals((Transform)obj);
+			else
+				return false;
 		}
 
-		public static bool operator ==(Transform left, Transform right)
-		{
-			return (((left.Location == right.Location) && (left.Rotation == right.Rotation)) && (left.Scale == right.Scale));
-		}
+		public static bool operator ==(Transform left, Transform right) => left.Equals(right);
 
-		public static bool operator !=(Transform left, Transform right)
-		{
-			return (((left.Location != right.Location) || (left.Rotation != right.Rotation)) || (left.Scale != right.Scale));
-		}
+		public static bool operator !=(Transform left, Transform right) => !left.Equals(right);
 
-		public override int GetHashCode()
-		{
-			return Location.GetHashCode() ^ Rotation.GetHashCode() ^ Scale.GetHashCode();
-		}
+		public override int GetHashCode() => Location.GetHashCode() ^ rotation.GetHashCode() ^ scale.GetHashCode();
 	}
 }
