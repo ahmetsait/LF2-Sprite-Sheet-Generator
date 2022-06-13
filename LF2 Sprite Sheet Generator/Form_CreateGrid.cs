@@ -18,7 +18,7 @@ namespace LF2.Sprite_Sheet_Generator
 			InitializeComponent();
 		}
 
-		public Image grid = null;
+		public Bitmap grid = null;
 
 		private void button_Cancel_Click(object sender, EventArgs e)
 		{
@@ -34,7 +34,7 @@ namespace LF2.Sprite_Sheet_Generator
 				int.TryParse(textBox_Row.Text, out row) &&
 				int.TryParse(textBox_Column.Text, out col))
 			{
-				Image result = new Bitmap((w + 1) * col, (h + 1) * row, PixelFormat.Format24bppRgb);
+				Bitmap result = new Bitmap((w + 1) * col, (h + 1) * row, PixelFormat.Format24bppRgb);
 				using (Graphics g = Graphics.FromImage(result))
 				{
 					g.Clear(Color.Black);

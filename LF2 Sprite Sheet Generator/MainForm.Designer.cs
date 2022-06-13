@@ -61,7 +61,6 @@
 			this.opacityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripComboBox_Opacity = new System.Windows.Forms.ToolStripComboBox();
 			this.splitContainer = new System.Windows.Forms.SplitContainer();
-			this.templateBox = new LF2.Sprite_Sheet_Generator.TemplateBox();
 			this.panel_ObjectProperties = new System.Windows.Forms.Panel();
 			this.groupBox_Sprite = new System.Windows.Forms.GroupBox();
 			this.checkBox_AlphaChannel = new System.Windows.Forms.CheckBox();
@@ -101,6 +100,7 @@
 			this.saveFileDialog_Template = new System.Windows.Forms.SaveFileDialog();
 			this.openFileDialog_Template = new System.Windows.Forms.OpenFileDialog();
 			this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+			this.label7 = new System.Windows.Forms.Label();
 			this.statusStrip.SuspendLayout();
 			this.toolBox.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
@@ -327,28 +327,28 @@
 			this.toolStripMenuItem_ChessBoard.Image = global::LF2.Sprite_Sheet_Generator.Properties.Resources.check;
 			this.toolStripMenuItem_ChessBoard.Interpolation = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
 			this.toolStripMenuItem_ChessBoard.Name = "toolStripMenuItem_ChessBoard";
-			this.toolStripMenuItem_ChessBoard.Size = new System.Drawing.Size(183, 28);
+			this.toolStripMenuItem_ChessBoard.Size = new System.Drawing.Size(177, 28);
 			this.toolStripMenuItem_ChessBoard.Text = "Chess &Board";
 			this.toolStripMenuItem_ChessBoard.Click += new System.EventHandler(this.toolStripMenuItem_ChessBoard_Click);
 			// 
 			// toolStripSeparator4
 			// 
 			this.toolStripSeparator4.Name = "toolStripSeparator4";
-			this.toolStripSeparator4.Size = new System.Drawing.Size(180, 6);
+			this.toolStripSeparator4.Size = new System.Drawing.Size(174, 6);
 			// 
 			// toolStripMenuItem_Color
 			// 
 			this.toolStripMenuItem_Color.Image = global::LF2.Sprite_Sheet_Generator.Properties.Resources.ColorBlack;
 			this.toolStripMenuItem_Color.Interpolation = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
 			this.toolStripMenuItem_Color.Name = "toolStripMenuItem_Color";
-			this.toolStripMenuItem_Color.Size = new System.Drawing.Size(183, 28);
+			this.toolStripMenuItem_Color.Size = new System.Drawing.Size(177, 28);
 			this.toolStripMenuItem_Color.Text = "&Color";
 			this.toolStripMenuItem_Color.Click += new System.EventHandler(this.toolStripMenuItem_Color_Click);
 			// 
 			// toolStripMenuItem_AdjustColor
 			// 
 			this.toolStripMenuItem_AdjustColor.Name = "toolStripMenuItem_AdjustColor";
-			this.toolStripMenuItem_AdjustColor.Size = new System.Drawing.Size(183, 28);
+			this.toolStripMenuItem_AdjustColor.Size = new System.Drawing.Size(177, 28);
 			this.toolStripMenuItem_AdjustColor.Text = "&Adjust Color...";
 			this.toolStripMenuItem_AdjustColor.Click += new System.EventHandler(this.toolStripMenuItem_AdjustColor_Click);
 			// 
@@ -397,14 +397,6 @@
 			// toolStripComboBox_Opacity
 			// 
 			this.toolStripComboBox_Opacity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.toolStripComboBox_Opacity.Items.AddRange(new object[] {
-            "0%",
-            "10%",
-            "25%",
-            "50%",
-            "75%",
-            "90%",
-            "100%"});
 			this.toolStripComboBox_Opacity.Name = "toolStripComboBox_Opacity";
 			this.toolStripComboBox_Opacity.Size = new System.Drawing.Size(121, 28);
 			this.toolStripComboBox_Opacity.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBox_Opacity_SelectedIndexChanged);
@@ -419,7 +411,7 @@
 			// splitContainer.Panel1
 			// 
 			this.splitContainer.Panel1.BackColor = System.Drawing.SystemColors.Control;
-			this.splitContainer.Panel1.Controls.Add(this.templateBox);
+			this.splitContainer.Panel1.Controls.Add(this.label7);
 			this.splitContainer.Panel1.RightToLeft = System.Windows.Forms.RightToLeft.No;
 			// 
 			// splitContainer.Panel2
@@ -442,30 +434,6 @@
 			this.splitContainer.TabIndex = 4;
 			this.splitContainer.TabStop = false;
 			// 
-			// templateBox
-			// 
-			this.templateBox.AllowDrop = true;
-			this.templateBox.BackColor = System.Drawing.Color.Black;
-			this.templateBox.BackgroundImage = global::LF2.Sprite_Sheet_Generator.Properties.Resources.check;
-			this.templateBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.templateBox.GuideImage = global::LF2.Sprite_Sheet_Generator.Properties.Resources.dev_temp;
-			this.templateBox.Location = new System.Drawing.Point(0, 0);
-			this.templateBox.MissingImage = global::LF2.Sprite_Sheet_Generator.Properties.Resources.broken_img;
-			this.templateBox.Name = "templateBox";
-			this.templateBox.Offset = ((System.Drawing.PointF)(resources.GetObject("templateBox.Offset")));
-			this.templateBox.ShowCoordinateSystem = true;
-			this.templateBox.Size = new System.Drawing.Size(776, 619);
-			this.templateBox.Smoothing = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-			this.templateBox.TabIndex = 0;
-			this.templateBox.Transparency = true;
-			this.templateBox.SelectionChanged += new System.EventHandler(this.templateBox_SelectionChanged);
-			this.templateBox.EditModeChanged += new System.EventHandler(this.templateBox_EditModeChanged);
-			this.templateBox.ZoomChanged += new System.EventHandler(this.templateBox_ZoomChanged);
-			this.templateBox.OffsetChanged += new System.EventHandler(this.templateBox_OffsetChanged);
-			this.templateBox.TransformEdit += new System.EventHandler(this.templateBox_SelectionChanged);
-			this.templateBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.templateBox_DragDrop);
-			this.templateBox.DragEnter += new System.Windows.Forms.DragEventHandler(this.templateBox_DragEnter);
-			// 
 			// panel_ObjectProperties
 			// 
 			this.panel_ObjectProperties.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
@@ -476,7 +444,7 @@
 			this.panel_ObjectProperties.Controls.Add(this.groupBox_Render);
 			this.panel_ObjectProperties.Location = new System.Drawing.Point(3, 209);
 			this.panel_ObjectProperties.Name = "panel_ObjectProperties";
-			this.panel_ObjectProperties.Size = new System.Drawing.Size(475, 407);
+			this.panel_ObjectProperties.Size = new System.Drawing.Size(471, 407);
 			this.panel_ObjectProperties.TabIndex = 4;
 			// 
 			// groupBox_Sprite
@@ -497,7 +465,7 @@
 			this.groupBox_Sprite.ForeColor = System.Drawing.Color.Navy;
 			this.groupBox_Sprite.Location = new System.Drawing.Point(3, 192);
 			this.groupBox_Sprite.Name = "groupBox_Sprite";
-			this.groupBox_Sprite.Size = new System.Drawing.Size(469, 212);
+			this.groupBox_Sprite.Size = new System.Drawing.Size(468, 212);
 			this.groupBox_Sprite.TabIndex = 2;
 			this.groupBox_Sprite.TabStop = false;
 			this.groupBox_Sprite.Text = "Sprite Sheet";
@@ -563,7 +531,7 @@
 			this.button_SaveSprite.AutoSize = true;
 			this.button_SaveSprite.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.button_SaveSprite.ForeColor = System.Drawing.SystemColors.ControlText;
-			this.button_SaveSprite.Location = new System.Drawing.Point(326, 176);
+			this.button_SaveSprite.Location = new System.Drawing.Point(325, 176);
 			this.button_SaveSprite.Name = "button_SaveSprite";
 			this.button_SaveSprite.Size = new System.Drawing.Size(134, 30);
 			this.button_SaveSprite.TabIndex = 3;
@@ -588,7 +556,7 @@
 			this.button_PreviewSprite.AutoSize = true;
 			this.button_PreviewSprite.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.button_PreviewSprite.ForeColor = System.Drawing.SystemColors.ControlText;
-			this.button_PreviewSprite.Location = new System.Drawing.Point(390, 140);
+			this.button_PreviewSprite.Location = new System.Drawing.Point(389, 140);
 			this.button_PreviewSprite.Name = "button_PreviewSprite";
 			this.button_PreviewSprite.Size = new System.Drawing.Size(70, 30);
 			this.button_PreviewSprite.TabIndex = 3;
@@ -636,7 +604,7 @@
 			this.groupBox_Template.Controls.Add(this.button_SaveTemplate);
 			this.groupBox_Template.Controls.Add(this.button_LoadTemplate);
 			this.groupBox_Template.ForeColor = System.Drawing.Color.Navy;
-			this.groupBox_Template.Location = new System.Drawing.Point(244, 14);
+			this.groupBox_Template.Location = new System.Drawing.Point(244, 3);
 			this.groupBox_Template.Name = "groupBox_Template";
 			this.groupBox_Template.Size = new System.Drawing.Size(130, 118);
 			this.groupBox_Template.TabIndex = 2;
@@ -785,7 +753,7 @@
 			this.drawBox_Symbol.Rectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
 			this.drawBox_Symbol.Rectangles = ((System.Collections.Generic.List<System.Drawing.Rectangle>)(resources.GetObject("drawBox_Symbol.Rectangles")));
 			this.drawBox_Symbol.ShiftKey = false;
-			this.drawBox_Symbol.Size = new System.Drawing.Size(175, 170);
+			this.drawBox_Symbol.Size = new System.Drawing.Size(171, 170);
 			this.drawBox_Symbol.TabIndex = 2;
 			this.drawBox_Symbol.TabStop = false;
 			this.drawBox_Symbol.Trancparency = true;
@@ -796,7 +764,7 @@
 			this.checkBox_RenderTransparency.AutoSize = true;
 			this.checkBox_RenderTransparency.Checked = true;
 			this.checkBox_RenderTransparency.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.checkBox_RenderTransparency.Location = new System.Drawing.Point(289, 179);
+			this.checkBox_RenderTransparency.Location = new System.Drawing.Point(282, 179);
 			this.checkBox_RenderTransparency.Name = "checkBox_RenderTransparency";
 			this.checkBox_RenderTransparency.Size = new System.Drawing.Size(189, 24);
 			this.checkBox_RenderTransparency.TabIndex = 1;
@@ -951,10 +919,19 @@
 			this.toolTip.InitialDelay = 500;
 			this.toolTip.ReshowDelay = 100;
 			// 
+			// label7
+			// 
+			this.label7.AutoSize = true;
+			this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+			this.label7.Location = new System.Drawing.Point(192, 144);
+			this.label7.Name = "label7";
+			this.label7.Size = new System.Drawing.Size(46, 18);
+			this.label7.TabIndex = 0;
+			this.label7.Text = "label7";
+			// 
 			// MainForm
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
 			this.ClientSize = new System.Drawing.Size(1262, 673);
 			this.Controls.Add(this.splitContainer);
 			this.Controls.Add(this.toolBox);
@@ -972,6 +949,7 @@
 			this.toolBox.ResumeLayout(false);
 			this.toolBox.PerformLayout();
 			this.splitContainer.Panel1.ResumeLayout(false);
+			this.splitContainer.Panel1.PerformLayout();
 			this.splitContainer.Panel2.ResumeLayout(false);
 			this.splitContainer.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer)).EndInit();
@@ -996,7 +974,6 @@
 		private System.Windows.Forms.StatusStrip statusStrip;
 		private System.Windows.Forms.ToolStrip toolBox;
 		private System.Windows.Forms.SplitContainer splitContainer;
-		private TemplateBox templateBox;
 		private BetterToolStripDropDownButton toolStripDropDownButton_BackgroundStyle;
 		private BetterToolStripMenuItem toolStripMenuItem_ChessBoard;
 		private BetterToolStripMenuItem toolStripMenuItem_Color;
@@ -1064,6 +1041,7 @@
 		private System.Windows.Forms.ToolStripMenuItem opacityToolStripMenuItem;
 		private System.Windows.Forms.ToolStripComboBox toolStripComboBox_Opacity;
 		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_LoadFromFile;
+		private System.Windows.Forms.Label label7;
 	}
 }
 

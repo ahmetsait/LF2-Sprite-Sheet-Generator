@@ -561,14 +561,14 @@ namespace LF2.Sprite_Sheet_Generator
 			}
 		}
 
-		Image pointImage = null;
+		Bitmap pointImage = null;
 		[DefaultValue(null)]
-		public Image PointImage
+		public Bitmap PointImage
 		{
 			get { return pointImage; }
 			set
 			{
-				Image old = pointImage;
+				Bitmap old = pointImage;
 				pointImage = value;
 				base.Invalidate();
 
@@ -930,14 +930,14 @@ namespace LF2.Sprite_Sheet_Generator
 			}
 		}
 
-		Image image;
+		Bitmap image;
 		[DefaultValue(null)]
-		public Image Image
+		public Bitmap Image
 		{
 			get { return image; }
 			set
 			{
-				Image old = image;
+				Bitmap old = image;
 				image = value;
 				if (pictureMode == PictureMode.AutoSize)
 					this.Size = image.Size;

@@ -8,6 +8,12 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 
+using OpenTK;
+using Gr = OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL;
+using NX;
+using NX.Graphics;
+
 namespace LF2.Sprite_Sheet_Generator
 {
 	public partial class MainForm : Form
@@ -15,21 +21,46 @@ namespace LF2.Sprite_Sheet_Generator
 		public MainForm()
 		{
 			InitializeComponent();
+			// HACK: Visual Studio violently crashes when GLControl is used inside designer
+			this.templateBox = new LF2.Sprite_Sheet_Generator.TemplateBox();
+			this.splitContainer.Panel1.Controls.Add(this.templateBox);
+			this.templateBox.Name = nameof(templateBox);
+			this.templateBox.AllowDrop = true;
+			this.templateBox.BackColor = System.Drawing.Color.Black;
+			this.templateBox.BackgroundChessBoard = true;
+			this.templateBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.templateBox.GuideImage = global::LF2.Sprite_Sheet_Generator.Properties.Resources.dev_temp;
+			this.templateBox.Location = new System.Drawing.Point(0, 0);
+			this.templateBox.MissingImage = global::LF2.Sprite_Sheet_Generator.Properties.Resources.broken_img;
+			this.templateBox.ShowCoordinateSystem = true;
+			this.templateBox.TabIndex = 0;
+			this.templateBox.SelectionChanged += new System.EventHandler(this.templateBox_SelectionChanged);
+			this.templateBox.EditModeChanged += new System.EventHandler(this.templateBox_EditModeChanged);
+			this.templateBox.ZoomChanged += new System.EventHandler(this.templateBox_ZoomChanged);
+			this.templateBox.OffsetChanged += new System.EventHandler(this.templateBox_OffsetChanged);
+			this.templateBox.TransformEdit += new System.EventHandler(this.templateBox_SelectionChanged);
+			this.templateBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.templateBox_DragDrop);
+			this.templateBox.DragEnter += new System.Windows.Forms.DragEventHandler(this.templateBox_DragEnter);
+
+			foreach (float opacity in opacityList)
+				toolStripComboBox_Opacity.Items.Add(opacity * 100 + "%");
+			toolStripComboBox_Opacity.SelectedIndex = 2;
+
 			Application.ThreadException += Application_ThreadException;
 		}
+
+		private TemplateBox templateBox;
 
 		private void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
 		{
 			ShowException(e.Exception);
 		}
 
-		float[] opacityList = { 0f, 0.10f, 0.25f, 0.50f, 0.75f, 0.90f, 1.00f };
+		float[] opacityList = { 1.00f, 0.90f, 0.75f, 0.50f, 0.25f, 0.10f, 0f };
 
 		private void MainForm_Load(object sender, EventArgs e)
 		{
-			toolStripComboBox_Opacity.SelectedIndex = 3;
 			templateBox.ScaleFit();
-			templateBox_OffsetChanged(templateBox, e);
 		}
 		
 		public void ShowException(Exception ex, string title = null, IWin32Window owner = null)
@@ -85,14 +116,14 @@ namespace LF2.Sprite_Sheet_Generator
 
 		private void toolStripMenuItem_ChessBoard_Click(object sender, EventArgs e)
 		{
-			templateBox.BackgroundImage = Properties.Resources.check;
+			templateBox.BackgroundChessBoard = true;
 			toolStripMenuItem_ChessBoard.Checked = true;
 			toolStripMenuItem_Color.Checked = false;
 		}
 
 		private void toolStripMenuItem_Color_Click(object sender, EventArgs e)
 		{
-			templateBox.BackgroundImage = null;
+			templateBox.BackgroundChessBoard = false;
 			toolStripMenuItem_Color.Checked = true;
 			toolStripMenuItem_ChessBoard.Checked = false;
 		}
@@ -146,7 +177,7 @@ namespace LF2.Sprite_Sheet_Generator
 			templateBox.Zoom = 4;
 		}
 
-		public void AdjustGuideImage(Image guide)
+		public void AdjustGuideImage(Bitmap guide)
 		{
 			templateBox.GuideImage = guide;
 			templateBox.ScaleFit();
@@ -155,7 +186,7 @@ namespace LF2.Sprite_Sheet_Generator
 		private void toolStripMenuItem_LoadFromFile_Click(object sender, EventArgs e)
 		{
 			if (openFileDialog_Image.ShowDialog(this) == DialogResult.OK && File.Exists(openFileDialog_Image.FileName))
-				AdjustGuideImage(Image.FromFile(openFileDialog_Image.FileName));
+				AdjustGuideImage(new Bitmap(openFileDialog_Image.FileName));
 		}
 
 		private void toolStripComboBox_Opacity_SelectedIndexChanged(object sender, EventArgs e)
@@ -168,12 +199,12 @@ namespace LF2.Sprite_Sheet_Generator
 
 		private void templateBox_ZoomChanged(object sender, EventArgs e)
 		{
-			toolStripStatusLabel_Zoom.Text = templateBox.Zoom.ToString("0.##");
+			toolStripStatusLabel_Zoom.Text = templateBox.Zoom.ToString("0.00");
 		}
 
 		private void templateBox_OffsetChanged(object sender, EventArgs e)
 		{
-			toolStripStatusLabel_Offset.Text = templateBox.Offset.X.ToString("0.##") + " , " + templateBox.Offset.Y.ToString("0.##");
+			toolStripStatusLabel_Offset.Text = templateBox.Offset.X.ToString("0.00") + " , " + templateBox.Offset.Y.ToString("0.00");
 			statusStrip.Refresh();
 		}
 
@@ -186,10 +217,10 @@ namespace LF2.Sprite_Sheet_Generator
 				if (imageFilter.Any((ext) => file.EndsWith(ext)))
 				{
 					string name = GetUniqueSymbolName(Path.GetFileNameWithoutExtension(file));
-					Image img = Image.FromFile(file);
+					Bitmap img = new Bitmap(file);
 
 					listBox_Symbols.Items.Add(name);
-					templateBox.Sprites.Add(name, img);
+					templateBox.Sprites.Add(name, Tuple.Create(img, img.LoadTextureGL()));
 				}
 			}
 			catch (Exception ex)
@@ -276,14 +307,14 @@ namespace LF2.Sprite_Sheet_Generator
 		{
 			if (listBox_Symbols.SelectedIndex >= 0)
 			{
-				drawBox_Symbol.Image = templateBox.Sprites[listBox_Symbols.SelectedItem as string];
+				drawBox_Symbol.Image = templateBox.Sprites[listBox_Symbols.SelectedItem as string].Item1;
 				drawBox_Symbol.Refresh();
 			}
 		}
 
 		private void checkBox_SymbolsTransparency_CheckedChanged(object sender, EventArgs e)
 		{
-			templateBox.Transparency = drawBox_Symbol.Trancparency = checkBox_RenderTransparency.Checked;
+			//templateBox.Transparency = drawBox_Symbol.Trancparency = checkBox_RenderTransparency.Checked;
 		}
 
 		private void button_RenameSymbol_Click(object sender, EventArgs e)
@@ -346,7 +377,7 @@ namespace LF2.Sprite_Sheet_Generator
 				var img = templateBox.GuideImage;
 				templateBox.GuideImage = null;
 				img.Dispose();
-				templateBox.GuideImage = Image.FromFile(selected);
+				templateBox.GuideImage = new Bitmap(selected);
 			}
 			if ((selected = files.FirstOrDefault((file) => file.EndsWith(".xml"))) != null)
 			{
@@ -392,7 +423,7 @@ namespace LF2.Sprite_Sheet_Generator
 
 		static int editingTransform = 0;
 		public bool Editing { get { return editingTransform > 0; } }
-		// This kinda ugly hack but works
+		// So much for a simple RAII
 		class EditingScope : IDisposable
 		{
 			public EditingScope()
@@ -594,12 +625,18 @@ namespace LF2.Sprite_Sheet_Generator
 		
 		private void trackBar_AlphaCut_Scroll(object sender, EventArgs e)
 		{
+			var color = templateBox.HighPassFilter;
+			color.A = trackBar_AlphaCut.Value / 255f;
+			templateBox.HighPassFilter = color;
 			label_AlphaCut.Text = trackBar_AlphaCut.Value.ToString();
 			label_AlphaCut.Refresh();
 		}
 
 		private void trackBar_Transparency_Scroll(object sender, EventArgs e)
 		{
+			var color = templateBox.HighPassFilter;
+			color.R = color.G = color.B = trackBar_Transparency.Value / 255f;
+			templateBox.HighPassFilter = color;
 			label_Transparency.Text = trackBar_Transparency.Value.ToString();
 			label_Transparency.Refresh();
 		}
@@ -678,6 +715,7 @@ namespace LF2.Sprite_Sheet_Generator
 				if (fcg.ShowDialog(this) == DialogResult.OK)
 				{
 					templateBox.GuideImage = fcg.grid;
+					templateBox.ScaleFit();
 				}
 			}
 		}

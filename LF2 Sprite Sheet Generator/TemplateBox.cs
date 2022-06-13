@@ -5,10 +5,17 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+
+using OpenTK;
+using Gr = OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL4;
+using NX;
+using NX.Graphics;
+using System.Text;
+using System.IO;
 
 namespace LF2.Sprite_Sheet_Generator
 {
@@ -20,50 +27,156 @@ namespace LF2.Sprite_Sheet_Generator
 		Scale
 	}
 	#endregion
-
-	[Serializable]
-	public class Render
-	{
-		[XmlAttribute]
-		public string symbolName;
-		public Transform transform;
-
-		public Render() { }
-
-		public Render(string symbolName, Transform transform)
-		{
-			this.symbolName = symbolName;
-			this.transform = transform;
-		}
-
-		public Render Clone() => (Render)this.MemberwiseClone();
-
-		/// For backwards compatiblity
-		[XmlAttribute]
-		public string spriteName { get { return symbolName; } set { symbolName = value; } }
-	}
 	
-	public class TemplateBox : Control
+	public class TemplateBox : GLControl
 	{
 		#region Constructors
 
-		public TemplateBox() : base()
+		#if DEBUG
+		public TemplateBox() : base(Gr.GraphicsMode.Default, 3, 3, Gr.GraphicsContextFlags.ForwardCompatible | Gr.GraphicsContextFlags.Debug)
+		#else
+		public TemplateBox() : base(Gr.GraphicsMode.Default, 3, 3, Gr.GraphicsContextFlags.ForwardCompatible)
+		#endif
 		{
-			guideImageAttr.SetColorMatrix(new ColorMatrix() { Matrix33 = guideImageAlpha }, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
-			if (guideTransparency)
+			MakeCurrent();
+			VSync = false;
+			
+			openGLVersionMajor = GL.GetInteger(GetPName.MajorVersion);
+			openGLVersionMinor = GL.GetInteger(GetPName.MinorVersion);
+
+			extensions = new HashSet<string>();
+			int extensionCount = GL.GetInteger(GetPName.NumExtensions);
+			for (int i = 0; i < extensionCount; i++)
+				extensions.Add(GL.GetString(StringNameIndexed.Extensions, i));
+			
+			#if DEBUG
+			lock (logLock)
 			{
-				imageAttr.SetColorKey(transparencyKey, transparencyKey, ColorAdjustType.Bitmap);
-				guideImageAttr.SetColorKey(transparencyKey, transparencyKey, ColorAdjustType.Bitmap);
+				if (logger == null)
+					logger = File.AppendText("opengl_debug_log.txt");
+				logger.WriteLine("========================================");
+				logger.WriteLine("Renderer: {0}", GL.GetString(StringName.Renderer));
+				logger.WriteLine("OpenGL Version: {0}", GL.GetString(StringName.Version));
+				logger.WriteLine("GLSL Version: {0}", GL.GetString(StringName.ShadingLanguageVersion));
+				logger.WriteLine("Vendor: {0}", GL.GetString(StringName.Vendor));
+				logger.WriteLine("Time: {0}", DateTime.Now.ToString());
+				logger.WriteLine("----------------------------------------");
+				logger.Flush(); 
 			}
+
+			bool debugSupported = true;
+			if (openGLVersionMajor >= 4 && openGLVersionMinor >= 3)
+				GL.DebugMessageCallback(
+						(DebugSource source, DebugType type, int id, DebugSeverity severity, int length, IntPtr message, IntPtr userParam) =>
+						{
+							lock (logLock)
+							{
+								logger.WriteLine($"[{id} - {source}, {type}, {severity}]: {Marshal.PtrToStringAnsi(message, length)}");
+								var trace = new StackTrace(1, true);
+								logger.WriteLine(trace.ToString());
+								logger.Flush();
+							}
+						},
+						IntPtr.Zero
+					);
+			else if (extensions.Contains("GL_KHR_debug"))
+				GL.Khr.DebugMessageCallback(
+						(DebugSource source, DebugType type, int id, DebugSeverity severity, int length, IntPtr message, IntPtr userParam) =>
+						{
+							lock (logLock)
+							{
+								logger.WriteLine($"[{id} - {source}, {type}, {severity}]: {Marshal.PtrToStringAnsi(message, length)}");
+								var trace = new StackTrace(1, true);
+								logger.WriteLine(trace.ToString());
+								logger.Flush();
+							}
+						},
+						IntPtr.Zero
+					);
+			else if (extensions.Contains("GL_ARB_debug_output"))
+				GL.Arb.DebugMessageCallback(
+						(DebugSource source, DebugType type, int id, DebugSeverity severity, int length, IntPtr message, IntPtr userParam) =>
+						{
+							lock (logLock)
+							{
+								logger.WriteLine($"[{id} - {source}, {type}, {severity}]: {Marshal.PtrToStringAnsi(message, length)}");
+								var trace = new StackTrace(1, true);
+								logger.WriteLine(trace.ToString());
+								logger.Flush();
+							}
+						},
+						IntPtr.Zero
+					);
 			else
+				debugSupported = false;
+			if (debugSupported)
+				GL.Enable(EnableCap.DebugOutput);
+			#endif
+			
+			GL.Disable(EnableCap.CullFace);
+			GL.Enable(EnableCap.Blend);
+			GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
+			GL.Enable(EnableCap.LineSmooth);
+			GL.Hint(HintTarget.LineSmoothHint, HintMode.Nicest);
+				
+			guideImageMesh = new Mesh();
+			guideImageMesh.vertices = new Vertex[4];
+			guideImageMesh.vertices[0] = new Vertex()
 			{
-				imageAttr.ClearColorKey(ColorAdjustType.Bitmap);
-				guideImageAttr.ClearColorKey(ColorAdjustType.Bitmap);
+				position = new Vector2(-1, -1),
+				texCoord = new Vector2(0, 0),
+				color = new Vector4(1, 1, 1, guideImageAlpha)
+			};
+			guideImageMesh.vertices[1] = new Vertex()
+			{
+				position = new Vector2(1, -1),
+				texCoord = new Vector2(1, 0),
+				color = new Vector4(1, 1, 1, guideImageAlpha)
+			};
+			guideImageMesh.vertices[2] = new Vertex()
+			{
+				position = new Vector2(1, 1),
+				texCoord = new Vector2(1, 1),
+				color = new Vector4(1, 1, 1, guideImageAlpha)
+			};
+			guideImageMesh.vertices[3] = new Vertex()
+			{
+				position = new Vector2(-1, 1),
+				texCoord = new Vector2(0, 1),
+				color = new Vector4(1, 1, 1, guideImageAlpha)
+			};
+
+			if (guideImageMesh.indices == null)
+				guideImageMesh.indices = new uint[4] { 0, 1, 2, 3 };
+
+			if (!guideImageMesh.CheckBufferIntegration())
+				throw new ApplicationException("Guide image mesh not integrated.");
+
+			guideImageMesh.Reload(BufferUsageHint.StaticDraw);
+
+			renderShader = new Shader(mainVert, renderFrag = File.ReadAllText("render.frag"));
+			guideShader = new Shader(guideVert, guideFrag);
+			mainShader = new Shader(mainVert, renderFrag);
+			tileShader = new Shader(tileVert, tileFrag);
+
+			var quad = new Vector2[4] { new Vector2(-1, -1), new Vector2(1, -1), new Vector2(1, 1), new Vector2(-1, 1) };
+
+			GL.GenVertexArrays(1, out chessBoardVao);
+			GL.GenBuffers(1, out chessBoardVbo);
+
+			GL.BindVertexArray(chessBoardVao);
+			{
+				GL.BindBuffer(BufferTarget.ArrayBuffer, chessBoardVbo);
+				GL.BufferData(BufferTarget.ArrayBuffer, quad.Length * Vector2.SizeInBytes, quad, BufferUsageHint.StaticDraw);
+
+				GL.EnableVertexAttribArray(0);
+				GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, Vector2.SizeInBytes, 0);
 			}
-			this.SetStyle(ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.DoubleBuffer, true);
+			GL.BindVertexArray(0);
+
 			base.TabStop = false;
 			this.renders = new List<Render>(128);
-			this.Sprites = new Dictionary<string, Image>(16);
+			this.Sprites = new Dictionary<string, Tuple<Bitmap,  int>>(16);
 			this.selectedRenders = new HashSet<int>();
 		}
 
@@ -71,7 +184,148 @@ namespace LF2.Sprite_Sheet_Generator
 
 		#region Fields
 
-		public Dictionary<string, Image> Sprites { get; private set; }
+		HashSet<string> extensions;
+		int openGLVersionMajor, openGLVersionMinor;
+
+		#if DEBUG
+		protected static StreamWriter logger;
+		protected static object logLock = new object();
+		#endif
+
+		private const string guideVert = @"#version 330 core
+
+layout (location = 0) in vec2 position;
+layout (location = 1) in vec2 texCoord;
+layout (location = 2) in vec4 color;
+
+out vec2 texCoordFrag;
+out vec4 colorFrag;
+
+uniform int width;
+uniform int height;
+uniform vec2 offset;
+uniform float zoom;
+
+uniform sampler2D tex;
+
+float map(float value, float min1, float max1, float min2, float max2)
+{
+	return (value - min1) * (max2 - min2) / (max1 - min1) + min2;
+}
+
+void main()
+{
+	vec2 texSize = textureSize(tex, 0);
+	vec2 pos = vec2(
+		map(position.x, -1, 1, 0, texSize.x),
+		map(position.y, -1, 1, 0, texSize.y)
+	);
+	pos = (pos - offset) * zoom;
+	gl_Position = vec4(vec2(map(pos.x, 0, width, 0, 2), map(pos.y, 0, height, 0, -2)), 0.0, 1.0);
+	texCoordFrag = texCoord;
+	colorFrag = color;
+}";
+		private const string guideFrag = @"#version 330 core
+
+in vec2 texCoordFrag;
+in vec4 colorFrag;
+
+out vec4 fragColor;
+
+uniform vec4 highPassFilter;
+uniform sampler2D tex;
+
+void main()
+{
+	vec4 c = texture(tex, texCoordFrag) * colorFrag;
+	if (c.r <= highPassFilter.r || c.g <= highPassFilter.g || c.b <= highPassFilter.b || c.a <= highPassFilter.a)
+		discard;
+	fragColor = c;
+}";
+		private const string mainVert = @"#version 330 core
+
+layout (location = 0) in vec2 position;
+layout (location = 1) in vec2 texCoord;
+layout (location = 2) in vec4 color;
+
+out vec2 texCoordFrag;
+out vec4 colorFrag;
+
+uniform int width;
+uniform int height;
+uniform vec2 offset;
+uniform float zoom;
+
+uniform sampler2D tex;
+uniform vec2 location;
+uniform float rotation;
+uniform float scale;
+
+float map(float value, float min1, float max1, float min2, float max2)
+{
+	return (value - min1) * (max2 - min2) / (max1 - min1) + min2;
+}
+
+vec2 rotate(vec2 v, float a)
+{
+	float s = sin(a);
+	float c = cos(a);
+	mat2 m = mat2(c, s, -s, c);
+	return m * v;
+}
+
+void main()
+{
+	vec2 texSize = textureSize(tex, 0);
+	vec2 pos = rotate(position * texSize / 2 * scale, rotation);
+	pos = (pos + location - offset) * zoom;
+	gl_Position = vec4(vec2(map(pos.x, 0, width, 0, 2), map(pos.y, 0, height, 0, -2)), 0.0, 1.0);
+	texCoordFrag = texCoord;
+	colorFrag = color;
+}";
+		private const string mainFrag = @"#version 330 core
+
+in vec2 texCoordFrag;
+in vec4 colorFrag;
+
+out vec4 fragColor;
+
+uniform vec4 highPassFilter;
+uniform sampler2D tex;
+
+void main()
+{
+	vec4 c = texture(tex, texCoordFrag) * colorFrag;
+	if (c.r <= highPassFilter.r || c.g <= highPassFilter.g || c.b <= highPassFilter.b || c.a <= highPassFilter.a)
+		discard;
+	fragColor = c;
+}";
+		private const string tileVert = @"#version 330 core
+
+layout (location = 0) in vec2 position;
+
+void main()
+{
+	gl_Position = vec4(position, 0.0, 1.0);
+}";
+		private const string tileFrag = @"#version 330 core
+
+layout (origin_upper_left) in vec4 gl_FragCoord;
+out vec4 fragColor;
+
+void main()
+{
+	vec2 pos = mod(gl_FragCoord.xy, 16.0);
+	if ((pos.x < 8) != (pos.y < 8))
+		fragColor = vec4(1.0, 1.0, 1.0, 1.0);
+	else
+		fragColor = vec4(0.75, 0.75, 0.75, 1.0);
+}";
+
+		private string renderFrag;
+		private Shader? mainShader, guideShader, tileShader, renderShader;
+
+		public Dictionary<string, Tuple<Bitmap, int>> Sprites { get; private set; }
 
 		readonly List<Render> renders;
 		public IReadOnlyList<Render> Renders { get { return renders; } }
@@ -85,9 +339,6 @@ namespace LF2.Sprite_Sheet_Generator
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		public new bool TabStop { get { return false; } }
 		
-		private ImageAttributes imageAttr = new ImageAttributes(),
-			guideImageAttr = new ImageAttributes();
-
 		EditMode editMode;
 		[DefaultValue(EditMode.Move)]
 		public EditMode EditMode
@@ -133,13 +384,13 @@ namespace LF2.Sprite_Sheet_Generator
 			{
 				float old = zoom;
 				zoom = Math.Max(0.1f, value);
-				coordinatePen.Width = zoom;
-				imageBoundsDirty = true;
-				this.Invalidate();
-
-				if (old != zoom && ZoomChanged != null)
+				if (old != zoom)
 				{
-					ZoomChanged(this, EventArgs.Empty);
+					coordinatePen.Width = zoom;
+					imageBoundsDirty = true;
+					this.Invalidate();
+
+					ZoomChanged?.Invoke(this, EventArgs.Empty);
 				}
 			}
 		}
@@ -153,12 +404,12 @@ namespace LF2.Sprite_Sheet_Generator
 			{
 				PointF old = offset;
 				offset = guideImage != null ? value.Clamp(0, guideImage.Width, 0, guideImage.Height) : value;
-				imageBoundsDirty = true;
-				this.Invalidate();
-
-				if (old != offset && OffsetChanged != null)
+				if (old != offset)
 				{
-					OffsetChanged(this, EventArgs.Empty);
+					imageBoundsDirty = true;
+					this.Invalidate();
+
+					OffsetChanged?.Invoke(this, EventArgs.Empty);
 				}
 			}
 		}
@@ -192,109 +443,34 @@ namespace LF2.Sprite_Sheet_Generator
 			set
 			{
 				bool old = guideTransparency;
-				guideTransparency = value;
-				if (value)
-					guideImageAttr.SetColorKey(transparencyKey, transparencyKey, ColorAdjustType.Bitmap);
-				else
-					guideImageAttr.ClearColorKey(ColorAdjustType.Bitmap);
-				this.Invalidate();
-
-				if (old != value && GuideTransparencyChanged != null)
+				if (old != value)
 				{
-					GuideTransparencyChanged(this, EventArgs.Empty);
+					guideTransparency = value;
+					this.Invalidate();
+					GuideTransparencyChanged?.Invoke(this, EventArgs.Empty);
 				}
 			}
 		}
 		public event EventHandler GuideTransparencyChanged;
 
-		bool transparency;
-		[DefaultValue(false)]
-		public bool Transparency
+		Gr.Color4 highPassFilter = new Gr.Color4(-1f, -1f, -1f, -1f);
+		[EditorBrowsable(EditorBrowsableState.Advanced)]
+		public Gr.Color4 HighPassFilter
 		{
-			get { return transparency; }
+			get { return highPassFilter; }
 			set
 			{
-				bool old = transparency;
-				transparency = value;
-				if (value)
-					imageAttr.SetColorKey(transparencyKey, transparencyKey, ColorAdjustType.Bitmap);
-				else
-					imageAttr.ClearColorKey(ColorAdjustType.Bitmap);
-				this.Invalidate();
-
-				if (old != value && TransparencyChanged != null)
+				var old = highPassFilter;
+				if (old != value)
 				{
-					TransparencyChanged(this, EventArgs.Empty);
-				}
-			}
-		}
-		public event EventHandler TransparencyChanged;
-
-		Color transparencyKey = Color.Black;
-		[DefaultValue(typeof(Color), "Black")]
-		public Color TransparencyKey
-		{
-			get { return transparencyKey; }
-			set
-			{
-				Color old = transparencyKey;
-				transparencyKey = value;
-				if (transparency)
-					imageAttr.SetColorKey(transparencyKey, transparencyKey, ColorAdjustType.Bitmap);
-				else
-					imageAttr.ClearColorKey(ColorAdjustType.Bitmap);
-				if (guideTransparency)
-					guideImageAttr.SetColorKey(transparencyKey, transparencyKey, ColorAdjustType.Bitmap);
-				else
-					guideImageAttr.ClearColorKey(ColorAdjustType.Bitmap);
-				this.Invalidate();
-
-				if (old != value && TransparencyKeyChanged != null)
-				{
-					TransparencyKeyChanged(this, EventArgs.Empty);
+					highPassFilter = value;
+					this.Invalidate();
+					TransparencyKeyChanged?.Invoke(this, EventArgs.Empty);
 				}
 			}
 		}
 		public event EventHandler TransparencyKeyChanged;
-
-		InterpolationMode backgroundInterpolation;
-		[DefaultValue(InterpolationMode.Default)]
-		public InterpolationMode BackgroundInterpolation
-		{
-			get { return backgroundInterpolation; }
-			set
-			{
-				InterpolationMode old = backgroundInterpolation;
-				backgroundInterpolation = value;
-				this.Invalidate();
-
-				if (old != value && BackgroundInterpolationChanged != null)
-				{
-					BackgroundInterpolationChanged(this, EventArgs.Empty);
-				}
-			}
-		}
-		public event EventHandler BackgroundInterpolationChanged;
-
-		SmoothingMode smoothing;
-		[DefaultValue(SmoothingMode.Default)]
-		public SmoothingMode Smoothing
-		{
-			get { return smoothing; }
-			set
-			{
-				SmoothingMode old = smoothing;
-				smoothing = value;
-				this.Invalidate();
-
-				if (old != value && SmoothingChanged != null)
-				{
-					SmoothingChanged(this, EventArgs.Empty);
-				}
-			}
-		}
-		public event EventHandler SmoothingChanged;
-
+		
 		bool showCoordinateSystem;
 		[DefaultValue(false)]
 		public bool ShowCoordinateSystem
@@ -373,42 +549,53 @@ namespace LF2.Sprite_Sheet_Generator
 		}
 		public event EventHandler SelectionColorChanged;
 
-		Image missingImage;
+		int missingImageTex;
+		Bitmap missingImage;
 		[DefaultValue(null)]
-		public Image MissingImage
+		public Bitmap MissingImage
 		{
 			get { return missingImage; }
 			set
 			{
-				Image old = missingImage;
-				missingImage = value;
-				
-				this.Invalidate();
-
-				if (!Object.ReferenceEquals(old, value) && MissingImageChanged != null)
+				Bitmap old = missingImage;
+				if (!Object.ReferenceEquals(old, value))
 				{
-					MissingImageChanged(this, EventArgs.Empty);
+					missingImage = value;
+					if (missingImage != null)
+						missingImageTex = missingImage.LoadTextureGL(missingImageTex);
+					else
+						missingImageTex = 0;
+					this.Invalidate();
+
+					MissingImageChanged?.Invoke(this, EventArgs.Empty);
 				}
 			}
 		}
 		public event EventHandler MissingImageChanged;
 
-		Image guideImage;
+		Mesh guideImageMesh;
+
+		int guideImageTex;
+		Bitmap guideImage;
 		[DefaultValue(null)]
-		public Image GuideImage
+		public Bitmap GuideImage
 		{
 			get { return guideImage; }
 			set
 			{
-				Image old = guideImage;
-				guideImage = value;
-				Offset = offset;
-				imageBoundsDirty = true;
-				this.Invalidate();
-
-				if (!Object.ReferenceEquals(old, value) && GuideImageChanged != null)
+				Bitmap old = guideImage;
+				if (!Object.ReferenceEquals(old, value))
 				{
-					GuideImageChanged(this, EventArgs.Empty);
+					guideImage = value;
+					if (guideImage != null)
+						guideImageTex = guideImage.LoadTextureGL(guideImageTex);
+					else
+						guideImageTex = 0;
+					Offset = offset;
+					imageBoundsDirty = true;
+					this.Invalidate();
+
+					GuideImageChanged?.Invoke(this, EventArgs.Empty);
 				}
 			}
 		}
@@ -422,13 +609,13 @@ namespace LF2.Sprite_Sheet_Generator
 			set
 			{
 				float old = guideImageAlpha;
-				guideImageAlpha = value;
-				guideImageAttr.SetColorMatrix(new ColorMatrix() { Matrix33 = guideImageAlpha }, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
-				this.Invalidate();
-
-				if (old != value && GuideImageAlphaChanged != null)
+				if (old != value)
 				{
-					GuideImageAlphaChanged(this, EventArgs.Empty);
+					guideImageAlpha = value;
+					if (guideImageMesh.OverwriteColor(new Gr.Color4(1, 1, 1, guideImageAlpha)))
+						guideImageMesh.Reload(index:false);
+					this.Invalidate();
+					GuideImageAlphaChanged?.Invoke(this, EventArgs.Empty);
 				}
 			}
 		}
@@ -452,15 +639,40 @@ namespace LF2.Sprite_Sheet_Generator
 			}
 		}
 		public event EventHandler GuideInterpolationChanged;
+		
+		private int chessBoardVao;
+		private int chessBoardVbo;
+		bool backgroundChessBoard = true;
+		[DefaultValue(true)]
+		public bool BackgroundChessBoard
+		{
+			get { return backgroundChessBoard; }
+			set
+			{
+				bool old = backgroundChessBoard;
+				backgroundChessBoard = value;
 
-		#endregion
+				this.Invalidate();
+
+				if (old != value && BackgroundChessBoardChanged != null)
+				{
+					BackgroundChessBoardChanged(this, EventArgs.Empty);
+				}
+			}
+		}
+		public event EventHandler BackgroundChessBoardChanged;
+
+#endregion
 
 		#region Methods
-		
+
 		public virtual Bitmap RenderFinalImage(int alphaCut, int transparencyRange, bool onGuide, bool alphaChannel)
 		{
-			Bitmap result = new Bitmap(guideImage.Width, guideImage.Height, alphaChannel ? PixelFormat.Format32bppArgb : PixelFormat.Format24bppRgb);
-			Bitmap canvas = new Bitmap(guideImage.Width, guideImage.Height, PixelFormat.Format32bppArgb);
+			Bitmap result = new Bitmap(
+				guideImage.Width, guideImage.Height, alphaChannel ?
+				System.Drawing.Imaging.PixelFormat.Format32bppArgb : System.Drawing.Imaging.PixelFormat.Format24bppRgb
+			);
+			Bitmap canvas = new Bitmap(guideImage.Width, guideImage.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 			using (Graphics g = Graphics.FromImage(canvas))
 			{
 				g.Clear(Color.FromArgb(0, Color.Black));
@@ -470,10 +682,10 @@ namespace LF2.Sprite_Sheet_Generator
 				{
 					if (render.transform.Scale == 0f)
 						continue;
-					Image sprite;
+					Bitmap sprite;
 					if (TryGetImageFromSpriteName(render.symbolName, out sprite, false))
 					{
-						using (sprite = ((Image)sprite.Clone()))
+						using (sprite = ((Bitmap)sprite.Clone()))
 						{
 							((Bitmap)sprite).ApplyBlackFilter((byte)transparencyRange.Clamp(0, 255));
 							g.TranslateTransform(render.transform.X, render.transform.Y);
@@ -547,7 +759,7 @@ namespace LF2.Sprite_Sheet_Generator
 
 		public virtual Point GetRenderLocation(Render render)
 		{
-			return render.transform.Location.Multiply(zoom).Add(ImageBounds.Location).toPoint();
+			return render.transform.Location.Multiply(zoom).Add(ImageBounds.Location).ToPoint();
 		}
 
 		public virtual PointF GetMidPointOfSelection()
@@ -566,7 +778,8 @@ namespace LF2.Sprite_Sheet_Generator
 		{
 			if (selectedRenders.Count > 0)
 			{
-				int[] indices = selectedRenders.ToArray();
+				int[] indices = new int[selectedRenders.Count];
+				selectedRenders.CopyTo(indices);
 				Array.Sort(indices);
 				for (int i = indices.Length - 1; i >= 0; i--)
 				{
@@ -583,7 +796,8 @@ namespace LF2.Sprite_Sheet_Generator
 		{
 			if (selectedRenders.Count > 0)
 			{
-				int[] indices = selectedRenders.ToArray();
+				int[] indices = new int[selectedRenders.Count];
+				selectedRenders.CopyTo(indices);
 				Array.Sort(indices);
 				for (int i = 0; i < indices.Length; i++)
 				{
@@ -597,9 +811,10 @@ namespace LF2.Sprite_Sheet_Generator
 			}
 		}
 
-		public virtual bool TryGetImageFromSpriteName(string spriteName, out Image image, bool missingSafe = true)
+		public virtual bool TryGetImageFromSpriteName(string spriteName, out Bitmap image, bool missingSafe = true)
 		{
-			if (spriteName == null || !Sprites.TryGetValue(spriteName, out image) || image == null)
+			Tuple<Bitmap, int> sprite;
+			if (spriteName == null || !Sprites.TryGetValue(spriteName, out sprite) || sprite == null)
 			{
 				if (missingImage != null && missingSafe)
 				{
@@ -613,7 +828,36 @@ namespace LF2.Sprite_Sheet_Generator
 				}
 			}
 			else
+			{
+				image = sprite.Item1;
 				return true;
+			}
+		}
+
+		public virtual bool TryGetImageFromSpriteName(string spriteName, out Bitmap image, out int tex, bool missingSafe = true)
+		{
+			Tuple<Bitmap, int> sprite;
+			if (spriteName == null || !Sprites.TryGetValue(spriteName, out sprite) || sprite == null)
+			{
+				if (missingImage != null && missingSafe)
+				{
+					image = missingImage;
+					tex = missingImageTex;
+					return true;
+				}
+				else
+				{
+					image = null;
+					tex = 0;
+					return false;
+				}
+			}
+			else
+			{
+				image = sprite.Item1;
+				tex = sprite.Item2;
+				return true;
+			}
 		}
 
 		public virtual bool TrySelectRenderIndexFromLocation(Point location, out int index)
@@ -625,7 +869,7 @@ namespace LF2.Sprite_Sheet_Generator
 				Point p = GetRenderLocation(renders[i]);
 				Point diff = location.Substract(p).Divide(zoom);
 				long squareDistance = (long)diff.X * diff.X + (long)diff.Y * diff.Y;
-				Image image;
+				Bitmap image;
 				if (TryGetImageFromSpriteName(renders[i].symbolName, out image))
 				{
 					long radius = (long)(Math.Min(image.Width, image.Height) * renders[i].transform.Scale / 2);
@@ -744,12 +988,16 @@ namespace LF2.Sprite_Sheet_Generator
 			Size result = new Size((int)(size.Width * scale), (int)(size.Height * scale));
 			return Tuple.Create((float)scale, new Rectangle(new Point((box.Width - result.Width) / 2, (box.Height - result.Height) / 2), result));
 		}
-
+		
 		[EditorBrowsable]
 		protected override void OnResize(EventArgs e)
 		{
 			base.OnResize(e);
 			imageBoundsDirty = true;
+
+			MakeCurrent();
+			GL.Viewport(this.ClientRectangle);
+
 			this.Invalidate();
 		}
 
@@ -760,131 +1008,191 @@ namespace LF2.Sprite_Sheet_Generator
 		[EditorBrowsable]
 		protected override void OnPaint(PaintEventArgs e)
 		{
-			e.Graphics.SmoothingMode = smoothing;
-			if (guideImage != null)
+			//MakeCurrent();
+			if (backgroundChessBoard)
 			{
-				if (guideInterpolation == InterpolationMode.Default)
-					e.Graphics.InterpolationMode = zoom >= 1 ? InterpolationMode.NearestNeighbor : InterpolationMode.Bilinear;
-				else
-					e.Graphics.InterpolationMode = guideInterpolation;
-				e.Graphics.DrawImage(guideImage, ImageBounds, 0, 0, guideImage.Width, guideImage.Height, GraphicsUnit.Pixel, guideImageAttr);
+				tileShader?.Use();
+				GL.BindVertexArray(chessBoardVao);
+				GL.DrawArrays(PrimitiveType.TriangleFan, 0, 4);
+				GL.BindVertexArray(0);
+			}
+			else
+			{
+				GL.ClearColor(BackColor);
+				GL.Clear(ClearBufferMask.ColorBufferBit);
+			}
+			if (guideShader.HasValue)
+			{
+				var shader = guideShader.Value;
+				shader.Use();
+				shader.SetUniform("width", ClientSize.Width);
+				shader.SetUniform("height", ClientSize.Height);
+				shader.SetUniform("offset", new Vector2(offset.X, offset.Y));
+				shader.SetUniform("zoom", zoom);
+				if (guideImageTex != 0)
+				{
+					shader.SetUniform("highPassFilter", guideTransparency ? Vector4.Zero : -Vector4.One);
+					GL.BindTexture(TextureTarget.Texture2D, guideImageTex);
+					guideImageMesh.Draw(PrimitiveType.TriangleFan);
+					GL.BindTexture(TextureTarget.Texture2D, 0);
+				}
 			}
 			if (showCoordinateSystem)
 			{
-				if (ImageBounds.X > -zoom / 2 && ImageBounds.X < this.Width + zoom / 2)
-					e.Graphics.DrawLine(coordinatePen, ImageBounds.X - zoom / 2, 0, ImageBounds.X - zoom / 2, this.Height);
-				if (ImageBounds.Y > -zoom / 2 && ImageBounds.Y < this.Height + zoom / 2)
-					e.Graphics.DrawLine(coordinatePen, 0, ImageBounds.Y - zoom / 2, this.Width, ImageBounds.Y - zoom / 2);
+				//TODO
 			}
-			e.Graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
-			Image sprite;
-			foreach (Render render in renders)
+			if (mainShader.HasValue)
 			{
-				if (render.transform.Scale == 0f)
-					continue;
-				if (TryGetImageFromSpriteName(render.symbolName, out sprite))
-				{
-					e.Graphics.TranslateTransform(ImageBounds.X, ImageBounds.Y);
-					e.Graphics.ScaleTransform(zoom, zoom);
-					e.Graphics.TranslateTransform(render.transform.X, render.transform.Y);
-					e.Graphics.RotateTransform(render.transform.Rotation);
-					e.Graphics.ScaleTransform(render.transform.Scale, render.transform.Scale);
-					Rectangle spriteBounds = new Rectangle(-sprite.Width / 2, -sprite.Height / 2, sprite.Width, sprite.Height);
-					e.Graphics.DrawImage(
-						sprite,
-						spriteBounds,
-						0, 0, sprite.Width, sprite.Height,
-						GraphicsUnit.Pixel,
-						imageAttr
-					);
-					e.Graphics.ResetTransform();
-				}
-			}
-			if (!rightMouse && !middleMouse)
-			{
-				foreach (int select in selectedRenders)
-				{
-					Render render = renders[select];
-					if (render.transform.Scale == 0f)
-						continue;
-					if (TryGetImageFromSpriteName(render.symbolName, out sprite))
-					{
-						long radius = (long)(Math.Min(sprite.Width, sprite.Height) * render.transform.Scale * zoom / 2);
-						Point p = render.transform.Location.Multiply(zoom).Add(ImageBounds.Location).toPoint();
-						e.Graphics.DrawEllipse(selectionPen, p.X - radius, p.Y - radius, radius * 2, radius * 2);
-						e.Graphics.FillEllipse(selectionBrush, p.X - radius, p.Y - radius, radius * 2, radius * 2);
-
-						e.Graphics.TranslateTransform(ImageBounds.X, ImageBounds.Y);
-						e.Graphics.ScaleTransform(zoom, zoom);
-						e.Graphics.TranslateTransform(render.transform.X, render.transform.Y);
-						e.Graphics.RotateTransform(render.transform.Rotation);
-						Rectangle spriteBounds = new Rectangle(-sprite.Width / 2, -sprite.Height / 2, sprite.Width, sprite.Height);
-						e.Graphics.ScaleTransform(1f / zoom, 1f / zoom);
-						e.Graphics.DrawRectangle(selectionPen, spriteBounds.Multiply(zoom * render.transform.Scale));
-						e.Graphics.ResetTransform();
-					}
-				}
-			}
-			if (selecting)
-			{
-				var selectionArea = this.selectionArea.Normalized();
-				e.Graphics.DrawRectangle(selectionPen, selectionArea);
-				e.Graphics.FillRectangle(selectionBrush, selectionArea);
-				List<Render> renders = GetRendersInArea(selectionArea);
+				var shader = mainShader.Value;
+				shader.Use();
+				shader.SetUniform("width", ClientSize.Width);
+				shader.SetUniform("height", ClientSize.Height);
+				shader.SetUniform("offset", new Vector2(offset.X, offset.Y));
+				shader.SetUniform("zoom", zoom);
 				foreach (Render render in renders)
 				{
 					if (render.transform.Scale == 0f)
 						continue;
-					if (TryGetImageFromSpriteName(render.symbolName, out sprite))
+					Bitmap sprite;
+					int tex;
+					if (TryGetImageFromSpriteName(render.symbolName, out sprite, out tex))
 					{
-						long radius = (long)(Math.Min(sprite.Width, sprite.Height) * render.transform.Scale * zoom / 2);
-						Point p = render.transform.Location.Multiply(zoom).Add(ImageBounds.Location).toPoint();
-						e.Graphics.DrawEllipse(selectionPen, p.X - radius, p.Y - radius, radius * 2, radius * 2);
-
-						e.Graphics.TranslateTransform(ImageBounds.X, ImageBounds.Y);
-						e.Graphics.ScaleTransform(zoom, zoom);
-						e.Graphics.TranslateTransform(render.transform.X, render.transform.Y);
-						e.Graphics.RotateTransform(render.transform.Rotation);
-						Rectangle spriteBounds = new Rectangle(-sprite.Width / 2, -sprite.Height / 2, sprite.Width, sprite.Height);
-						e.Graphics.ScaleTransform(1f / zoom, 1f / zoom);
-						e.Graphics.DrawRectangle(selectionPen, spriteBounds.Multiply(zoom * render.transform.Scale));
-						e.Graphics.ResetTransform();
+						shader.SetUniform("highPassFilter", highPassFilter.ToVector());
+						shader.SetUniform("location", new Vector2(render.transform.Location.X, render.transform.Location.Y));
+						shader.SetUniform("rotation", (float)Extensions.Degree2Radian(render.transform.Rotation));
+						shader.SetUniform("scale", render.transform.Scale);
+						GL.BindTexture(TextureTarget.Texture2D, tex);
+						guideImageMesh.Draw(PrimitiveType.TriangleFan);
+						GL.BindTexture(TextureTarget.Texture2D, 0);
 					}
 				}
 			}
-			else if (!rightMouse && !middleMouse)
-			{
-				Render render;
-				if (TrySelectRenderFromLocation(mouse, out render))
-				{
-					if (render.transform.Scale != 0f && TryGetImageFromSpriteName(render.symbolName, out sprite))
-					{
-						long radius = (long)(Math.Min(sprite.Width, sprite.Height) * render.transform.Scale * zoom / 2);
-						Point p = render.transform.Location.Multiply(zoom).Add(ImageBounds.Location).toPoint();
-						e.Graphics.DrawEllipse(selectionPen, p.X - radius, p.Y - radius, radius * 2, radius * 2);
+			SwapBuffers();
+			//{
+			//	e.Graphics.InterpolationMode = backgroundInterpolation;
+			//	base.OnPaintBackground(e);
 
-						e.Graphics.TranslateTransform(ImageBounds.X, ImageBounds.Y);
-						e.Graphics.ScaleTransform(zoom, zoom);
-						e.Graphics.TranslateTransform(render.transform.X, render.transform.Y);
-						e.Graphics.RotateTransform(render.transform.Rotation);
-						Rectangle spriteBounds = new Rectangle(-sprite.Width / 2, -sprite.Height / 2, sprite.Width, sprite.Height);
-						e.Graphics.ScaleTransform(1f / zoom, 1f / zoom);
-						e.Graphics.DrawRectangle(selectionPen, spriteBounds.Multiply(zoom * render.transform.Scale));
-						e.Graphics.ResetTransform();
-					}
-				}
-			}
+			//	e.Graphics.SmoothingMode = smoothing;
+			//	if (guideImage != null)
+			//	{
+			//		if (guideInterpolation == InterpolationMode.Default)
+			//			e.Graphics.InterpolationMode = zoom >= 1 ? InterpolationMode.NearestNeighbor : InterpolationMode.HighQualityBilinear;
+			//		else
+			//			e.Graphics.InterpolationMode = guideInterpolation;
+			//		e.Graphics.DrawImage(guideImage, ImageBounds, 0, 0, guideImage.Width, guideImage.Height, GraphicsUnit.Pixel, guideImageAttr);
+			//	}
+			//	if (showCoordinateSystem)
+			//	{
+			//		if (ImageBounds.X > -zoom / 2 && ImageBounds.X < this.Width + zoom / 2)
+			//			e.Graphics.DrawLine(coordinatePen, ImageBounds.X - zoom / 2, 0, ImageBounds.X - zoom / 2, this.Height);
+			//		if (ImageBounds.Y > -zoom / 2 && ImageBounds.Y < this.Height + zoom / 2)
+			//			e.Graphics.DrawLine(coordinatePen, 0, ImageBounds.Y - zoom / 2, this.Width, ImageBounds.Y - zoom / 2);
+			//	}
+			//	var interpolation = e.Graphics.InterpolationMode;
+			//	e.Graphics.InterpolationMode = zoom >= 1 ? InterpolationMode.NearestNeighbor : InterpolationMode.HighQualityBilinear;
+			//	Bitmap sprite;
+			//	foreach (Render render in renders)
+			//	{
+			//		if (render.transform.Scale == 0f)
+			//			continue;
+			//		if (TryGetImageFromSpriteName(render.symbolName, out sprite))
+			//		{
+			//			e.Graphics.TranslateTransform(ImageBounds.X, ImageBounds.Y);
+			//			e.Graphics.ScaleTransform(zoom, zoom);
+			//			e.Graphics.TranslateTransform(render.transform.X, render.transform.Y);
+			//			e.Graphics.RotateTransform(render.transform.Rotation);
+			//			e.Graphics.ScaleTransform(render.transform.Scale, render.transform.Scale);
+			//			Rectangle spriteBounds = new Rectangle(-sprite.Width / 2, -sprite.Height / 2, sprite.Width, sprite.Height);
+			//			e.Graphics.DrawImage(
+			//				sprite,
+			//				spriteBounds,
+			//				0, 0, sprite.Width, sprite.Height,
+			//				GraphicsUnit.Pixel,
+			//				imageAttr
+			//			);
+			//			e.Graphics.ResetTransform();
+			//		}
+			//	}
+			//	e.Graphics.InterpolationMode = interpolation;
+			//	if (!rightMouse && !middleMouse)
+			//	{
+			//		foreach (int select in selectedRenders)
+			//		{
+			//			Render render = renders[select];
+			//			if (render.transform.Scale == 0f)
+			//				continue;
+			//			if (TryGetImageFromSpriteName(render.symbolName, out sprite))
+			//			{
+			//				long radius = (long)(Math.Min(sprite.Width, sprite.Height) * render.transform.Scale * zoom / 2);
+			//				Point p = render.transform.Location.Multiply(zoom).Add(ImageBounds.Location).toPoint();
+			//				e.Graphics.DrawEllipse(selectionPen, p.X - radius, p.Y - radius, radius * 2, radius * 2);
+			//				e.Graphics.FillEllipse(selectionBrush, p.X - radius, p.Y - radius, radius * 2, radius * 2);
 
-			base.OnPaint(e);
+			//				e.Graphics.TranslateTransform(ImageBounds.X, ImageBounds.Y);
+			//				e.Graphics.ScaleTransform(zoom, zoom);
+			//				e.Graphics.TranslateTransform(render.transform.X, render.transform.Y);
+			//				e.Graphics.RotateTransform(render.transform.Rotation);
+			//				Rectangle spriteBounds = new Rectangle(-sprite.Width / 2, -sprite.Height / 2, sprite.Width, sprite.Height);
+			//				e.Graphics.ScaleTransform(1f / zoom, 1f / zoom);
+			//				e.Graphics.DrawRectangle(selectionPen, spriteBounds.Multiply(zoom * render.transform.Scale));
+			//				e.Graphics.ResetTransform();
+			//			}
+			//		}
+			//	}
+			//	if (selecting)
+			//	{
+			//		var selectionArea = this.selectionArea.Normalized();
+			//		e.Graphics.DrawRectangle(selectionPen, selectionArea);
+			//		e.Graphics.FillRectangle(selectionBrush, selectionArea);
+			//		List<Render> renders = GetRendersInArea(selectionArea);
+			//		foreach (Render render in renders)
+			//		{
+			//			if (render.transform.Scale == 0f)
+			//				continue;
+			//			if (TryGetImageFromSpriteName(render.symbolName, out sprite))
+			//			{
+			//				long radius = (long)(Math.Min(sprite.Width, sprite.Height) * render.transform.Scale * zoom / 2);
+			//				Point p = render.transform.Location.Multiply(zoom).Add(ImageBounds.Location).toPoint();
+			//				e.Graphics.DrawEllipse(selectionPen, p.X - radius, p.Y - radius, radius * 2, radius * 2);
+
+			//				e.Graphics.TranslateTransform(ImageBounds.X, ImageBounds.Y);
+			//				e.Graphics.ScaleTransform(zoom, zoom);
+			//				e.Graphics.TranslateTransform(render.transform.X, render.transform.Y);
+			//				e.Graphics.RotateTransform(render.transform.Rotation);
+			//				Rectangle spriteBounds = new Rectangle(-sprite.Width / 2, -sprite.Height / 2, sprite.Width, sprite.Height);
+			//				e.Graphics.ScaleTransform(1f / zoom, 1f / zoom);
+			//				e.Graphics.DrawRectangle(selectionPen, spriteBounds.Multiply(zoom * render.transform.Scale));
+			//				e.Graphics.ResetTransform();
+			//			}
+			//		}
+			//	}
+			//	else if (!rightMouse && !middleMouse)
+			//	{
+			//		Render render;
+			//		if (TrySelectRenderFromLocation(mouse, out render))
+			//		{
+			//			if (render.transform.Scale != 0f && TryGetImageFromSpriteName(render.symbolName, out sprite))
+			//			{
+			//				long radius = (long)(Math.Min(sprite.Width, sprite.Height) * render.transform.Scale * zoom / 2);
+			//				Point p = render.transform.Location.Multiply(zoom).Add(ImageBounds.Location).toPoint();
+			//				e.Graphics.DrawEllipse(selectionPen, p.X - radius, p.Y - radius, radius * 2, radius * 2);
+
+			//				e.Graphics.TranslateTransform(ImageBounds.X, ImageBounds.Y);
+			//				e.Graphics.ScaleTransform(zoom, zoom);
+			//				e.Graphics.TranslateTransform(render.transform.X, render.transform.Y);
+			//				e.Graphics.RotateTransform(render.transform.Rotation);
+			//				Rectangle spriteBounds = new Rectangle(-sprite.Width / 2, -sprite.Height / 2, sprite.Width, sprite.Height);
+			//				e.Graphics.ScaleTransform(1f / zoom, 1f / zoom);
+			//				e.Graphics.DrawRectangle(selectionPen, spriteBounds.Multiply(zoom * render.transform.Scale));
+			//				e.Graphics.ResetTransform();
+			//			}
+			//		}
+			//	}
+
+			//	base.OnPaint(e);
+			//}
 		}
-
-		[EditorBrowsable]
-		protected override void OnPaintBackground(PaintEventArgs e)
-		{
-			e.Graphics.InterpolationMode = backgroundInterpolation;
-			base.OnPaintBackground(e);
-		}
-
+		
 		#endregion
 
 		#region Mouse Handlers
@@ -1013,7 +1321,7 @@ namespace LF2.Sprite_Sheet_Generator
 				}
 				else if (middleMouse || leftMouse && ModifierKeys.HasFlag(Keys.Alt))
 				{
-					Offset = grabOffset.Substract(mouse.Substract(grabStart).toPointF().Divide(zoom));
+					Offset = grabOffset.Substract(mouse.Substract(grabStart).ToPointF().Divide(zoom));
 				}
 			}
 			this.Refresh();

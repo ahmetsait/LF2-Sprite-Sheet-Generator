@@ -12,7 +12,7 @@ namespace LF2.Sprite_Sheet_Generator
 {
 	public partial class Form_Preview : Form
 	{
-		public Form_Preview(Image image)
+		public Form_Preview(Bitmap image)
 		{
 			InitializeComponent();
 			this.templateBox.GuideImage = image;
