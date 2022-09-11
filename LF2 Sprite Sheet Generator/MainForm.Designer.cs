@@ -36,30 +36,9 @@
 			this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
 			this.toolStripStatusLabel_Zoom = new System.Windows.Forms.ToolStripStatusLabel();
 			this.toolBox = new System.Windows.Forms.ToolStrip();
-			this.toolStripButton_Move = new LF2.Sprite_Sheet_Generator.BetterToolStripButton();
-			this.toolStripButton_Rotate = new LF2.Sprite_Sheet_Generator.BetterToolStripButton();
-			this.toolStripButton_Scale = new LF2.Sprite_Sheet_Generator.BetterToolStripButton();
 			this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-			this.betterToolStripButton_BringToFront = new LF2.Sprite_Sheet_Generator.BetterToolStripButton();
-			this.betterToolStripButton_SendToBack = new LF2.Sprite_Sheet_Generator.BetterToolStripButton();
 			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-			this.toolStripButton_ScaleFit = new LF2.Sprite_Sheet_Generator.BetterToolStripButton();
-			this.toolStripButton_Scale1 = new LF2.Sprite_Sheet_Generator.BetterToolStripButton();
-			this.toolStripButton_Scale2 = new LF2.Sprite_Sheet_Generator.BetterToolStripButton();
-			this.toolStripButton_Scale4 = new LF2.Sprite_Sheet_Generator.BetterToolStripButton();
 			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-			this.toolStripButton_Transparency = new LF2.Sprite_Sheet_Generator.BetterToolStripButton();
-			this.toolStripDropDownButton_BackgroundStyle = new LF2.Sprite_Sheet_Generator.BetterToolStripDropDownButton();
-			this.toolStripMenuItem_ChessBoard = new LF2.Sprite_Sheet_Generator.BetterToolStripMenuItem();
-			this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-			this.toolStripMenuItem_Color = new LF2.Sprite_Sheet_Generator.BetterToolStripMenuItem();
-			this.toolStripMenuItem_AdjustColor = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripDropDownButton_GuideImage = new LF2.Sprite_Sheet_Generator.BetterToolStripDropDownButton();
-			this.toolStripMenuItem_LoadFromFile = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem_CreateEmptyGrid = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-			this.opacityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripComboBox_Opacity = new System.Windows.Forms.ToolStripComboBox();
 			this.splitContainer = new System.Windows.Forms.SplitContainer();
 			this.panel_ObjectProperties = new System.Windows.Forms.Panel();
 			this.groupBox_Sprite = new System.Windows.Forms.GroupBox();
@@ -85,7 +64,6 @@
 			this.label6 = new System.Windows.Forms.Label();
 			this.textBox_RenderScale = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
-			this.drawBox_Symbol = new LF2.Sprite_Sheet_Generator.DrawBox();
 			this.checkBox_RenderTransparency = new System.Windows.Forms.CheckBox();
 			this.listBox_Symbols = new System.Windows.Forms.ListBox();
 			this.button_AddRender = new System.Windows.Forms.Button();
@@ -100,11 +78,31 @@
 			this.saveFileDialog_Template = new System.Windows.Forms.SaveFileDialog();
 			this.openFileDialog_Template = new System.Windows.Forms.OpenFileDialog();
 			this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-			this.label7 = new System.Windows.Forms.Label();
+			this.drawBox_Symbol = new LF2.Sprite_Sheet_Generator.DrawBox();
+			this.toolStripButton_Move = new LF2.Sprite_Sheet_Generator.BetterToolStripButton();
+			this.toolStripButton_Rotate = new LF2.Sprite_Sheet_Generator.BetterToolStripButton();
+			this.toolStripButton_Scale = new LF2.Sprite_Sheet_Generator.BetterToolStripButton();
+			this.betterToolStripButton_BringToFront = new LF2.Sprite_Sheet_Generator.BetterToolStripButton();
+			this.betterToolStripButton_SendToBack = new LF2.Sprite_Sheet_Generator.BetterToolStripButton();
+			this.toolStripButton_ScaleFit = new LF2.Sprite_Sheet_Generator.BetterToolStripButton();
+			this.toolStripButton_Scale1 = new LF2.Sprite_Sheet_Generator.BetterToolStripButton();
+			this.toolStripButton_Scale2 = new LF2.Sprite_Sheet_Generator.BetterToolStripButton();
+			this.toolStripButton_Scale4 = new LF2.Sprite_Sheet_Generator.BetterToolStripButton();
+			this.toolStripButton_Transparency = new LF2.Sprite_Sheet_Generator.BetterToolStripButton();
+			this.toolStripDropDownButton_BackgroundStyle = new LF2.Sprite_Sheet_Generator.BetterToolStripDropDownButton();
+			this.toolStripMenuItem_ChessBoard = new LF2.Sprite_Sheet_Generator.BetterToolStripMenuItem();
+			this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolStripMenuItem_Color = new LF2.Sprite_Sheet_Generator.BetterToolStripMenuItem();
+			this.toolStripMenuItem_AdjustColor = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripDropDownButton_GuideImage = new LF2.Sprite_Sheet_Generator.BetterToolStripDropDownButton();
+			this.toolStripMenuItem_LoadFromFile = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem_CreateEmptyGrid = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+			this.opacityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripComboBox_Opacity = new System.Windows.Forms.ToolStripComboBox();
 			this.statusStrip.SuspendLayout();
 			this.toolBox.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
-			this.splitContainer.Panel1.SuspendLayout();
 			this.splitContainer.Panel2.SuspendLayout();
 			this.splitContainer.SuspendLayout();
 			this.panel_ObjectProperties.SuspendLayout();
@@ -119,14 +117,14 @@
 			// 
 			this.statusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
 			this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel4,
-            this.toolStripStatusLabel_Offset,
-            this.toolStripStatusLabel3,
-            this.toolStripStatusLabel_Zoom});
-			this.statusStrip.Location = new System.Drawing.Point(0, 648);
+			this.toolStripStatusLabel4,
+			this.toolStripStatusLabel_Offset,
+			this.toolStripStatusLabel3,
+			this.toolStripStatusLabel_Zoom});
+			this.statusStrip.Location = new System.Drawing.Point(0, 647);
 			this.statusStrip.Name = "statusStrip";
 			this.statusStrip.RenderMode = System.Windows.Forms.ToolStripRenderMode.ManagerRenderMode;
-			this.statusStrip.Size = new System.Drawing.Size(1262, 25);
+			this.statusStrip.Size = new System.Drawing.Size(1262, 26);
 			this.statusStrip.SizingGrip = false;
 			this.statusStrip.TabIndex = 0;
 			// 
@@ -159,247 +157,40 @@
 			// 
 			this.toolBox.ImageScalingSize = new System.Drawing.Size(22, 22);
 			this.toolBox.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButton_Move,
-            this.toolStripButton_Rotate,
-            this.toolStripButton_Scale,
-            this.toolStripSeparator5,
-            this.betterToolStripButton_BringToFront,
-            this.betterToolStripButton_SendToBack,
-            this.toolStripSeparator2,
-            this.toolStripButton_ScaleFit,
-            this.toolStripButton_Scale1,
-            this.toolStripButton_Scale2,
-            this.toolStripButton_Scale4,
-            this.toolStripSeparator3,
-            this.toolStripButton_Transparency,
-            this.toolStripDropDownButton_BackgroundStyle,
-            this.toolStripDropDownButton_GuideImage});
+			this.toolStripButton_Move,
+			this.toolStripButton_Rotate,
+			this.toolStripButton_Scale,
+			this.toolStripSeparator5,
+			this.betterToolStripButton_BringToFront,
+			this.betterToolStripButton_SendToBack,
+			this.toolStripSeparator2,
+			this.toolStripButton_ScaleFit,
+			this.toolStripButton_Scale1,
+			this.toolStripButton_Scale2,
+			this.toolStripButton_Scale4,
+			this.toolStripSeparator3,
+			this.toolStripButton_Transparency,
+			this.toolStripDropDownButton_BackgroundStyle,
+			this.toolStripDropDownButton_GuideImage});
 			this.toolBox.Location = new System.Drawing.Point(0, 0);
 			this.toolBox.Name = "toolBox";
 			this.toolBox.Size = new System.Drawing.Size(1262, 29);
 			this.toolBox.TabIndex = 3;
-			// 
-			// toolStripButton_Move
-			// 
-			this.toolStripButton_Move.Checked = true;
-			this.toolStripButton_Move.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.toolStripButton_Move.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButton_Move.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton_Move.Image")));
-			this.toolStripButton_Move.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButton_Move.Interpolation = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
-			this.toolStripButton_Move.Name = "toolStripButton_Move";
-			this.toolStripButton_Move.Size = new System.Drawing.Size(26, 26);
-			this.toolStripButton_Move.ToolTipText = "Move Tool (G)";
-			this.toolStripButton_Move.Click += new System.EventHandler(this.toolStripButton_Move_Click);
-			// 
-			// toolStripButton_Rotate
-			// 
-			this.toolStripButton_Rotate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButton_Rotate.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton_Rotate.Image")));
-			this.toolStripButton_Rotate.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButton_Rotate.Interpolation = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
-			this.toolStripButton_Rotate.Name = "toolStripButton_Rotate";
-			this.toolStripButton_Rotate.Size = new System.Drawing.Size(26, 26);
-			this.toolStripButton_Rotate.ToolTipText = "Rotate Tool (R)";
-			this.toolStripButton_Rotate.Click += new System.EventHandler(this.toolStripButton_Rotate_Click);
-			// 
-			// toolStripButton_Scale
-			// 
-			this.toolStripButton_Scale.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButton_Scale.Image = global::LF2.Sprite_Sheet_Generator.Properties.Resources.scale_tool;
-			this.toolStripButton_Scale.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButton_Scale.Interpolation = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
-			this.toolStripButton_Scale.Name = "toolStripButton_Scale";
-			this.toolStripButton_Scale.Size = new System.Drawing.Size(26, 26);
-			this.toolStripButton_Scale.ToolTipText = "Scale Tool (S)";
-			this.toolStripButton_Scale.Click += new System.EventHandler(this.toolStripButton_Scale_Click);
 			// 
 			// toolStripSeparator5
 			// 
 			this.toolStripSeparator5.Name = "toolStripSeparator5";
 			this.toolStripSeparator5.Size = new System.Drawing.Size(6, 29);
 			// 
-			// betterToolStripButton_BringToFront
-			// 
-			this.betterToolStripButton_BringToFront.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.betterToolStripButton_BringToFront.Image = global::LF2.Sprite_Sheet_Generator.Properties.Resources.bringtofront;
-			this.betterToolStripButton_BringToFront.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.betterToolStripButton_BringToFront.Interpolation = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
-			this.betterToolStripButton_BringToFront.Name = "betterToolStripButton_BringToFront";
-			this.betterToolStripButton_BringToFront.Size = new System.Drawing.Size(26, 26);
-			this.betterToolStripButton_BringToFront.Text = "Bring to Front";
-			this.betterToolStripButton_BringToFront.Click += new System.EventHandler(this.toolStripButton_BringToFront_Click);
-			// 
-			// betterToolStripButton_SendToBack
-			// 
-			this.betterToolStripButton_SendToBack.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.betterToolStripButton_SendToBack.Image = global::LF2.Sprite_Sheet_Generator.Properties.Resources.sendtoback;
-			this.betterToolStripButton_SendToBack.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.betterToolStripButton_SendToBack.Interpolation = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
-			this.betterToolStripButton_SendToBack.Name = "betterToolStripButton_SendToBack";
-			this.betterToolStripButton_SendToBack.Size = new System.Drawing.Size(26, 26);
-			this.betterToolStripButton_SendToBack.Text = "Send to Back";
-			this.betterToolStripButton_SendToBack.Click += new System.EventHandler(this.toolStripButton_SendToBack_Click);
-			// 
 			// toolStripSeparator2
 			// 
 			this.toolStripSeparator2.Name = "toolStripSeparator2";
 			this.toolStripSeparator2.Size = new System.Drawing.Size(6, 29);
 			// 
-			// toolStripButton_ScaleFit
-			// 
-			this.toolStripButton_ScaleFit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButton_ScaleFit.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton_ScaleFit.Image")));
-			this.toolStripButton_ScaleFit.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButton_ScaleFit.Interpolation = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
-			this.toolStripButton_ScaleFit.Name = "toolStripButton_ScaleFit";
-			this.toolStripButton_ScaleFit.Size = new System.Drawing.Size(26, 26);
-			this.toolStripButton_ScaleFit.ToolTipText = "Fit Image to Panel";
-			this.toolStripButton_ScaleFit.Click += new System.EventHandler(this.toolStripButton_ScaleFit_Click);
-			// 
-			// toolStripButton_Scale1
-			// 
-			this.toolStripButton_Scale1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButton_Scale1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton_Scale1.Image")));
-			this.toolStripButton_Scale1.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButton_Scale1.Interpolation = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
-			this.toolStripButton_Scale1.Name = "toolStripButton_Scale1";
-			this.toolStripButton_Scale1.Size = new System.Drawing.Size(26, 26);
-			this.toolStripButton_Scale1.ToolTipText = "Scale 1:1";
-			this.toolStripButton_Scale1.Click += new System.EventHandler(this.toolStripButton_Scale1_Click);
-			// 
-			// toolStripButton_Scale2
-			// 
-			this.toolStripButton_Scale2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButton_Scale2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton_Scale2.Image")));
-			this.toolStripButton_Scale2.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButton_Scale2.Interpolation = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
-			this.toolStripButton_Scale2.Name = "toolStripButton_Scale2";
-			this.toolStripButton_Scale2.Size = new System.Drawing.Size(26, 26);
-			this.toolStripButton_Scale2.ToolTipText = "Scale 1:2";
-			this.toolStripButton_Scale2.Click += new System.EventHandler(this.toolStripButton_Scale2_Click);
-			// 
-			// toolStripButton_Scale4
-			// 
-			this.toolStripButton_Scale4.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButton_Scale4.Image = global::LF2.Sprite_Sheet_Generator.Properties.Resources.scale4;
-			this.toolStripButton_Scale4.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButton_Scale4.Interpolation = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
-			this.toolStripButton_Scale4.Name = "toolStripButton_Scale4";
-			this.toolStripButton_Scale4.Size = new System.Drawing.Size(26, 26);
-			this.toolStripButton_Scale4.ToolTipText = "Scale 1:4";
-			this.toolStripButton_Scale4.Click += new System.EventHandler(this.toolStripButton_Scale4_Click);
-			// 
 			// toolStripSeparator3
 			// 
 			this.toolStripSeparator3.Name = "toolStripSeparator3";
 			this.toolStripSeparator3.Size = new System.Drawing.Size(6, 29);
-			// 
-			// toolStripButton_Transparency
-			// 
-			this.toolStripButton_Transparency.CheckOnClick = true;
-			this.toolStripButton_Transparency.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton_Transparency.Image")));
-			this.toolStripButton_Transparency.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButton_Transparency.Interpolation = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
-			this.toolStripButton_Transparency.Name = "toolStripButton_Transparency";
-			this.toolStripButton_Transparency.Size = new System.Drawing.Size(26, 26);
-			this.toolStripButton_Transparency.ToolTipText = "Transparent black pixels on guide image";
-			this.toolStripButton_Transparency.CheckedChanged += new System.EventHandler(this.toolStripButton_Transparency_CheckedChanged);
-			// 
-			// toolStripDropDownButton_BackgroundStyle
-			// 
-			this.toolStripDropDownButton_BackgroundStyle.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem_ChessBoard,
-            this.toolStripSeparator4,
-            this.toolStripMenuItem_Color,
-            this.toolStripMenuItem_AdjustColor});
-			this.toolStripDropDownButton_BackgroundStyle.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton_BackgroundStyle.Image")));
-			this.toolStripDropDownButton_BackgroundStyle.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripDropDownButton_BackgroundStyle.Interpolation = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-			this.toolStripDropDownButton_BackgroundStyle.Name = "toolStripDropDownButton_BackgroundStyle";
-			this.toolStripDropDownButton_BackgroundStyle.Size = new System.Drawing.Size(36, 26);
-			this.toolStripDropDownButton_BackgroundStyle.ToolTipText = "Background Style";
-			// 
-			// toolStripMenuItem_ChessBoard
-			// 
-			this.toolStripMenuItem_ChessBoard.Checked = true;
-			this.toolStripMenuItem_ChessBoard.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.toolStripMenuItem_ChessBoard.Image = global::LF2.Sprite_Sheet_Generator.Properties.Resources.check;
-			this.toolStripMenuItem_ChessBoard.Interpolation = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-			this.toolStripMenuItem_ChessBoard.Name = "toolStripMenuItem_ChessBoard";
-			this.toolStripMenuItem_ChessBoard.Size = new System.Drawing.Size(177, 28);
-			this.toolStripMenuItem_ChessBoard.Text = "Chess &Board";
-			this.toolStripMenuItem_ChessBoard.Click += new System.EventHandler(this.toolStripMenuItem_ChessBoard_Click);
-			// 
-			// toolStripSeparator4
-			// 
-			this.toolStripSeparator4.Name = "toolStripSeparator4";
-			this.toolStripSeparator4.Size = new System.Drawing.Size(174, 6);
-			// 
-			// toolStripMenuItem_Color
-			// 
-			this.toolStripMenuItem_Color.Image = global::LF2.Sprite_Sheet_Generator.Properties.Resources.ColorBlack;
-			this.toolStripMenuItem_Color.Interpolation = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-			this.toolStripMenuItem_Color.Name = "toolStripMenuItem_Color";
-			this.toolStripMenuItem_Color.Size = new System.Drawing.Size(177, 28);
-			this.toolStripMenuItem_Color.Text = "&Color";
-			this.toolStripMenuItem_Color.Click += new System.EventHandler(this.toolStripMenuItem_Color_Click);
-			// 
-			// toolStripMenuItem_AdjustColor
-			// 
-			this.toolStripMenuItem_AdjustColor.Name = "toolStripMenuItem_AdjustColor";
-			this.toolStripMenuItem_AdjustColor.Size = new System.Drawing.Size(177, 28);
-			this.toolStripMenuItem_AdjustColor.Text = "&Adjust Color...";
-			this.toolStripMenuItem_AdjustColor.Click += new System.EventHandler(this.toolStripMenuItem_AdjustColor_Click);
-			// 
-			// toolStripDropDownButton_GuideImage
-			// 
-			this.toolStripDropDownButton_GuideImage.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripDropDownButton_GuideImage.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem_LoadFromFile,
-            this.toolStripMenuItem_CreateEmptyGrid,
-            this.toolStripSeparator1,
-            this.opacityToolStripMenuItem,
-            this.toolStripComboBox_Opacity});
-			this.toolStripDropDownButton_GuideImage.Image = global::LF2.Sprite_Sheet_Generator.Properties.Resources.template_head;
-			this.toolStripDropDownButton_GuideImage.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripDropDownButton_GuideImage.Interpolation = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
-			this.toolStripDropDownButton_GuideImage.Name = "toolStripDropDownButton_GuideImage";
-			this.toolStripDropDownButton_GuideImage.Size = new System.Drawing.Size(36, 26);
-			this.toolStripDropDownButton_GuideImage.ToolTipText = "Adjust Guide Image...";
-			// 
-			// toolStripMenuItem_LoadFromFile
-			// 
-			this.toolStripMenuItem_LoadFromFile.Name = "toolStripMenuItem_LoadFromFile";
-			this.toolStripMenuItem_LoadFromFile.Size = new System.Drawing.Size(214, 26);
-			this.toolStripMenuItem_LoadFromFile.Text = "Load From &File...";
-			this.toolStripMenuItem_LoadFromFile.Click += new System.EventHandler(this.toolStripMenuItem_LoadFromFile_Click);
-			// 
-			// toolStripMenuItem_CreateEmptyGrid
-			// 
-			this.toolStripMenuItem_CreateEmptyGrid.Name = "toolStripMenuItem_CreateEmptyGrid";
-			this.toolStripMenuItem_CreateEmptyGrid.Size = new System.Drawing.Size(214, 26);
-			this.toolStripMenuItem_CreateEmptyGrid.Text = "Create &Empty Grid...";
-			this.toolStripMenuItem_CreateEmptyGrid.Click += new System.EventHandler(this.toolStripMenuItem_CreateEmptyGrid_Click);
-			// 
-			// toolStripSeparator1
-			// 
-			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(211, 6);
-			// 
-			// opacityToolStripMenuItem
-			// 
-			this.opacityToolStripMenuItem.Enabled = false;
-			this.opacityToolStripMenuItem.Name = "opacityToolStripMenuItem";
-			this.opacityToolStripMenuItem.Size = new System.Drawing.Size(214, 26);
-			this.opacityToolStripMenuItem.Text = "Opacity:";
-			// 
-			// toolStripComboBox_Opacity
-			// 
-			this.toolStripComboBox_Opacity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.toolStripComboBox_Opacity.Name = "toolStripComboBox_Opacity";
-			this.toolStripComboBox_Opacity.Size = new System.Drawing.Size(121, 28);
-			this.toolStripComboBox_Opacity.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBox_Opacity_SelectedIndexChanged);
 			// 
 			// splitContainer
 			// 
@@ -411,7 +202,6 @@
 			// splitContainer.Panel1
 			// 
 			this.splitContainer.Panel1.BackColor = System.Drawing.SystemColors.Control;
-			this.splitContainer.Panel1.Controls.Add(this.label7);
 			this.splitContainer.Panel1.RightToLeft = System.Windows.Forms.RightToLeft.No;
 			// 
 			// splitContainer.Panel2
@@ -428,7 +218,7 @@
 			this.splitContainer.Panel2.Controls.Add(this.button_AddSymbol);
 			this.splitContainer.Panel2.Controls.Add(this.button_MoveUp);
 			this.splitContainer.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
-			this.splitContainer.Size = new System.Drawing.Size(1262, 619);
+			this.splitContainer.Size = new System.Drawing.Size(1262, 618);
 			this.splitContainer.SplitterDistance = 776;
 			this.splitContainer.SplitterWidth = 8;
 			this.splitContainer.TabIndex = 4;
@@ -437,21 +227,21 @@
 			// panel_ObjectProperties
 			// 
 			this.panel_ObjectProperties.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.panel_ObjectProperties.AutoScroll = true;
 			this.panel_ObjectProperties.Controls.Add(this.groupBox_Sprite);
 			this.panel_ObjectProperties.Controls.Add(this.groupBox_Template);
 			this.panel_ObjectProperties.Controls.Add(this.groupBox_Render);
-			this.panel_ObjectProperties.Location = new System.Drawing.Point(3, 209);
+			this.panel_ObjectProperties.Location = new System.Drawing.Point(3, 208);
 			this.panel_ObjectProperties.Name = "panel_ObjectProperties";
-			this.panel_ObjectProperties.Size = new System.Drawing.Size(471, 407);
+			this.panel_ObjectProperties.Size = new System.Drawing.Size(467, 407);
 			this.panel_ObjectProperties.TabIndex = 4;
 			// 
 			// groupBox_Sprite
 			// 
 			this.groupBox_Sprite.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			| System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox_Sprite.Controls.Add(this.checkBox_AlphaChannel);
 			this.groupBox_Sprite.Controls.Add(this.checkBox_RenderGuide);
 			this.groupBox_Sprite.Controls.Add(this.trackBar_Transparency);
@@ -465,7 +255,7 @@
 			this.groupBox_Sprite.ForeColor = System.Drawing.Color.Navy;
 			this.groupBox_Sprite.Location = new System.Drawing.Point(3, 192);
 			this.groupBox_Sprite.Name = "groupBox_Sprite";
-			this.groupBox_Sprite.Size = new System.Drawing.Size(468, 212);
+			this.groupBox_Sprite.Size = new System.Drawing.Size(464, 212);
 			this.groupBox_Sprite.TabIndex = 2;
 			this.groupBox_Sprite.TabStop = false;
 			this.groupBox_Sprite.Text = "Sprite Sheet";
@@ -531,7 +321,7 @@
 			this.button_SaveSprite.AutoSize = true;
 			this.button_SaveSprite.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.button_SaveSprite.ForeColor = System.Drawing.SystemColors.ControlText;
-			this.button_SaveSprite.Location = new System.Drawing.Point(325, 176);
+			this.button_SaveSprite.Location = new System.Drawing.Point(321, 176);
 			this.button_SaveSprite.Name = "button_SaveSprite";
 			this.button_SaveSprite.Size = new System.Drawing.Size(134, 30);
 			this.button_SaveSprite.TabIndex = 3;
@@ -556,7 +346,7 @@
 			this.button_PreviewSprite.AutoSize = true;
 			this.button_PreviewSprite.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.button_PreviewSprite.ForeColor = System.Drawing.SystemColors.ControlText;
-			this.button_PreviewSprite.Location = new System.Drawing.Point(389, 140);
+			this.button_PreviewSprite.Location = new System.Drawing.Point(385, 140);
 			this.button_PreviewSprite.Name = "button_PreviewSprite";
 			this.button_PreviewSprite.Size = new System.Drawing.Size(70, 30);
 			this.button_PreviewSprite.TabIndex = 3;
@@ -736,42 +526,20 @@
 			this.label1.TabIndex = 1;
 			this.label1.Text = "Position:";
 			// 
-			// drawBox_Symbol
-			// 
-			this.drawBox_Symbol.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.drawBox_Symbol.BackgroundImage = global::LF2.Sprite_Sheet_Generator.Properties.Resources.check;
-			this.drawBox_Symbol.BackgroundInterpolation = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-			this.drawBox_Symbol.ControlKey = false;
-			this.drawBox_Symbol.Interpolation = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
-			this.drawBox_Symbol.Location = new System.Drawing.Point(303, 3);
-			this.drawBox_Symbol.MultiRectangleMode = false;
-			this.drawBox_Symbol.Name = "drawBox_Symbol";
-			this.drawBox_Symbol.OneRectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
-			this.drawBox_Symbol.PictureMode = LF2.Sprite_Sheet_Generator.PictureMode.ShrinkOnly;
-			this.drawBox_Symbol.Rectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
-			this.drawBox_Symbol.Rectangles = ((System.Collections.Generic.List<System.Drawing.Rectangle>)(resources.GetObject("drawBox_Symbol.Rectangles")));
-			this.drawBox_Symbol.ShiftKey = false;
-			this.drawBox_Symbol.Size = new System.Drawing.Size(171, 170);
-			this.drawBox_Symbol.TabIndex = 2;
-			this.drawBox_Symbol.TabStop = false;
-			this.drawBox_Symbol.Trancparency = true;
-			// 
 			// checkBox_RenderTransparency
 			// 
 			this.checkBox_RenderTransparency.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.checkBox_RenderTransparency.AutoSize = true;
 			this.checkBox_RenderTransparency.Checked = true;
 			this.checkBox_RenderTransparency.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.checkBox_RenderTransparency.Location = new System.Drawing.Point(282, 179);
+			this.checkBox_RenderTransparency.Location = new System.Drawing.Point(278, 178);
 			this.checkBox_RenderTransparency.Name = "checkBox_RenderTransparency";
 			this.checkBox_RenderTransparency.Size = new System.Drawing.Size(189, 24);
 			this.checkBox_RenderTransparency.TabIndex = 1;
 			this.checkBox_RenderTransparency.TabStop = false;
 			this.checkBox_RenderTransparency.Text = "Transparent black pixels";
 			this.toolTip.SetToolTip(this.checkBox_RenderTransparency, "Controls whether black pixels will be invisible similar to LF2\r\nIn order to get t" +
-        "he same effect while generating the sprite\r\nsheet set transparency range to 1");
+		"he same effect while generating the sprite\r\nsheet set transparency range to 1");
 			this.checkBox_RenderTransparency.UseVisualStyleBackColor = true;
 			this.checkBox_RenderTransparency.CheckedChanged += new System.EventHandler(this.checkBox_SymbolsTransparency_CheckedChanged);
 			// 
@@ -779,12 +547,12 @@
 			// 
 			this.listBox_Symbols.AllowDrop = true;
 			this.listBox_Symbols.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+			| System.Windows.Forms.AnchorStyles.Left)));
 			this.listBox_Symbols.FormattingEnabled = true;
 			this.listBox_Symbols.ItemHeight = 20;
 			this.listBox_Symbols.Location = new System.Drawing.Point(3, 3);
 			this.listBox_Symbols.Name = "listBox_Symbols";
-			this.listBox_Symbols.Size = new System.Drawing.Size(250, 164);
+			this.listBox_Symbols.Size = new System.Drawing.Size(250, 124);
 			this.listBox_Symbols.TabIndex = 0;
 			this.listBox_Symbols.TabStop = false;
 			this.listBox_Symbols.SelectedIndexChanged += new System.EventHandler(this.listBox_Symbols_SelectedIndexChanged);
@@ -795,7 +563,7 @@
 			// button_AddRender
 			// 
 			this.button_AddRender.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.button_AddRender.Location = new System.Drawing.Point(3, 173);
+			this.button_AddRender.Location = new System.Drawing.Point(3, 172);
 			this.button_AddRender.Name = "button_AddRender";
 			this.button_AddRender.Size = new System.Drawing.Size(142, 30);
 			this.button_AddRender.TabIndex = 3;
@@ -808,14 +576,14 @@
 			// button_RenameSymbol
 			// 
 			this.button_RenameSymbol.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.button_RenameSymbol.Location = new System.Drawing.Point(173, 173);
+			this.button_RenameSymbol.Location = new System.Drawing.Point(173, 172);
 			this.button_RenameSymbol.Name = "button_RenameSymbol";
 			this.button_RenameSymbol.Size = new System.Drawing.Size(80, 30);
 			this.button_RenameSymbol.TabIndex = 3;
 			this.button_RenameSymbol.TabStop = false;
 			this.button_RenameSymbol.Text = "Rename";
 			this.toolTip.SetToolTip(this.button_RenameSymbol, "Rename selected symbol on the list\r\nIt will invalidate objects referring to this " +
-        "symbol");
+		"symbol");
 			this.button_RenameSymbol.UseVisualStyleBackColor = true;
 			this.button_RenameSymbol.Click += new System.EventHandler(this.button_RenameSymbol_Click);
 			// 
@@ -886,8 +654,8 @@
 			// openFileDialog_Image
 			// 
 			this.openFileDialog_Image.Filter = "Image Files (*.bmp;*.dib;*.png;*.jpg;*.jpeg;*.jpe;*.jfif;*.gif;*.emf;*.tif;*.tiff" +
-    ";*.wmf)|*.bmp;*.dib;*.png;*.jpg;*.jpeg;*.jpe;*.jfif;*.gif;*.emf;*.tif;*.tiff;*.w" +
-    "mf";
+	";*.wmf)|*.bmp;*.dib;*.png;*.jpg;*.jpeg;*.jpe;*.jfif;*.gif;*.emf;*.tif;*.tiff;*.w" +
+	"mf";
 			this.openFileDialog_Image.Multiselect = true;
 			this.openFileDialog_Image.ReadOnlyChecked = true;
 			this.openFileDialog_Image.RestoreDirectory = true;
@@ -919,15 +687,234 @@
 			this.toolTip.InitialDelay = 500;
 			this.toolTip.ReshowDelay = 100;
 			// 
-			// label7
+			// drawBox_Symbol
 			// 
-			this.label7.AutoSize = true;
-			this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-			this.label7.Location = new System.Drawing.Point(192, 144);
-			this.label7.Name = "label7";
-			this.label7.Size = new System.Drawing.Size(46, 18);
-			this.label7.TabIndex = 0;
-			this.label7.Text = "label7";
+			this.drawBox_Symbol.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			| System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
+			this.drawBox_Symbol.BackgroundImage = global::LF2.Sprite_Sheet_Generator.Properties.Resources.check;
+			this.drawBox_Symbol.BackgroundInterpolation = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+			this.drawBox_Symbol.ControlKey = false;
+			this.drawBox_Symbol.Interpolation = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
+			this.drawBox_Symbol.Location = new System.Drawing.Point(303, 3);
+			this.drawBox_Symbol.MultiRectangleMode = false;
+			this.drawBox_Symbol.Name = "drawBox_Symbol";
+			this.drawBox_Symbol.OneRectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
+			this.drawBox_Symbol.PictureMode = LF2.Sprite_Sheet_Generator.PictureMode.ShrinkOnly;
+			this.drawBox_Symbol.Rectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
+			this.drawBox_Symbol.Rectangles = ((System.Collections.Generic.List<System.Drawing.Rectangle>)(resources.GetObject("drawBox_Symbol.Rectangles")));
+			this.drawBox_Symbol.ShiftKey = false;
+			this.drawBox_Symbol.Size = new System.Drawing.Size(167, 169);
+			this.drawBox_Symbol.TabIndex = 2;
+			this.drawBox_Symbol.TabStop = false;
+			this.drawBox_Symbol.Trancparency = true;
+			// 
+			// toolStripButton_Move
+			// 
+			this.toolStripButton_Move.Checked = true;
+			this.toolStripButton_Move.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.toolStripButton_Move.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButton_Move.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton_Move.Image")));
+			this.toolStripButton_Move.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButton_Move.Interpolation = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
+			this.toolStripButton_Move.Name = "toolStripButton_Move";
+			this.toolStripButton_Move.Size = new System.Drawing.Size(29, 26);
+			this.toolStripButton_Move.ToolTipText = "Move Tool (G)";
+			this.toolStripButton_Move.Click += new System.EventHandler(this.toolStripButton_Move_Click);
+			// 
+			// toolStripButton_Rotate
+			// 
+			this.toolStripButton_Rotate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButton_Rotate.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton_Rotate.Image")));
+			this.toolStripButton_Rotate.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButton_Rotate.Interpolation = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
+			this.toolStripButton_Rotate.Name = "toolStripButton_Rotate";
+			this.toolStripButton_Rotate.Size = new System.Drawing.Size(29, 26);
+			this.toolStripButton_Rotate.ToolTipText = "Rotate Tool (R)";
+			this.toolStripButton_Rotate.Click += new System.EventHandler(this.toolStripButton_Rotate_Click);
+			// 
+			// toolStripButton_Scale
+			// 
+			this.toolStripButton_Scale.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButton_Scale.Image = global::LF2.Sprite_Sheet_Generator.Properties.Resources.scale_tool;
+			this.toolStripButton_Scale.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButton_Scale.Interpolation = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
+			this.toolStripButton_Scale.Name = "toolStripButton_Scale";
+			this.toolStripButton_Scale.Size = new System.Drawing.Size(29, 26);
+			this.toolStripButton_Scale.ToolTipText = "Scale Tool (S)";
+			this.toolStripButton_Scale.Click += new System.EventHandler(this.toolStripButton_Scale_Click);
+			// 
+			// betterToolStripButton_BringToFront
+			// 
+			this.betterToolStripButton_BringToFront.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.betterToolStripButton_BringToFront.Image = global::LF2.Sprite_Sheet_Generator.Properties.Resources.bringtofront;
+			this.betterToolStripButton_BringToFront.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.betterToolStripButton_BringToFront.Interpolation = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
+			this.betterToolStripButton_BringToFront.Name = "betterToolStripButton_BringToFront";
+			this.betterToolStripButton_BringToFront.Size = new System.Drawing.Size(29, 26);
+			this.betterToolStripButton_BringToFront.Text = "Bring to Front";
+			this.betterToolStripButton_BringToFront.Click += new System.EventHandler(this.toolStripButton_BringToFront_Click);
+			// 
+			// betterToolStripButton_SendToBack
+			// 
+			this.betterToolStripButton_SendToBack.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.betterToolStripButton_SendToBack.Image = global::LF2.Sprite_Sheet_Generator.Properties.Resources.sendtoback;
+			this.betterToolStripButton_SendToBack.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.betterToolStripButton_SendToBack.Interpolation = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
+			this.betterToolStripButton_SendToBack.Name = "betterToolStripButton_SendToBack";
+			this.betterToolStripButton_SendToBack.Size = new System.Drawing.Size(29, 26);
+			this.betterToolStripButton_SendToBack.Text = "Send to Back";
+			this.betterToolStripButton_SendToBack.Click += new System.EventHandler(this.toolStripButton_SendToBack_Click);
+			// 
+			// toolStripButton_ScaleFit
+			// 
+			this.toolStripButton_ScaleFit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButton_ScaleFit.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton_ScaleFit.Image")));
+			this.toolStripButton_ScaleFit.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButton_ScaleFit.Interpolation = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
+			this.toolStripButton_ScaleFit.Name = "toolStripButton_ScaleFit";
+			this.toolStripButton_ScaleFit.Size = new System.Drawing.Size(29, 26);
+			this.toolStripButton_ScaleFit.ToolTipText = "Fit Image to Panel";
+			this.toolStripButton_ScaleFit.Click += new System.EventHandler(this.toolStripButton_ScaleFit_Click);
+			// 
+			// toolStripButton_Scale1
+			// 
+			this.toolStripButton_Scale1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButton_Scale1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton_Scale1.Image")));
+			this.toolStripButton_Scale1.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButton_Scale1.Interpolation = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
+			this.toolStripButton_Scale1.Name = "toolStripButton_Scale1";
+			this.toolStripButton_Scale1.Size = new System.Drawing.Size(29, 26);
+			this.toolStripButton_Scale1.ToolTipText = "Scale 1:1";
+			this.toolStripButton_Scale1.Click += new System.EventHandler(this.toolStripButton_Scale1_Click);
+			// 
+			// toolStripButton_Scale2
+			// 
+			this.toolStripButton_Scale2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButton_Scale2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton_Scale2.Image")));
+			this.toolStripButton_Scale2.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButton_Scale2.Interpolation = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
+			this.toolStripButton_Scale2.Name = "toolStripButton_Scale2";
+			this.toolStripButton_Scale2.Size = new System.Drawing.Size(29, 26);
+			this.toolStripButton_Scale2.ToolTipText = "Scale 1:2";
+			this.toolStripButton_Scale2.Click += new System.EventHandler(this.toolStripButton_Scale2_Click);
+			// 
+			// toolStripButton_Scale4
+			// 
+			this.toolStripButton_Scale4.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButton_Scale4.Image = global::LF2.Sprite_Sheet_Generator.Properties.Resources.scale4;
+			this.toolStripButton_Scale4.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButton_Scale4.Interpolation = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
+			this.toolStripButton_Scale4.Name = "toolStripButton_Scale4";
+			this.toolStripButton_Scale4.Size = new System.Drawing.Size(29, 26);
+			this.toolStripButton_Scale4.ToolTipText = "Scale 1:4";
+			this.toolStripButton_Scale4.Click += new System.EventHandler(this.toolStripButton_Scale4_Click);
+			// 
+			// toolStripButton_Transparency
+			// 
+			this.toolStripButton_Transparency.CheckOnClick = true;
+			this.toolStripButton_Transparency.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton_Transparency.Image")));
+			this.toolStripButton_Transparency.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButton_Transparency.Interpolation = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
+			this.toolStripButton_Transparency.Name = "toolStripButton_Transparency";
+			this.toolStripButton_Transparency.Size = new System.Drawing.Size(29, 26);
+			this.toolStripButton_Transparency.ToolTipText = "Transparent black pixels on guide image";
+			this.toolStripButton_Transparency.CheckedChanged += new System.EventHandler(this.toolStripButton_Transparency_CheckedChanged);
+			// 
+			// toolStripDropDownButton_BackgroundStyle
+			// 
+			this.toolStripDropDownButton_BackgroundStyle.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.toolStripMenuItem_ChessBoard,
+			this.toolStripSeparator4,
+			this.toolStripMenuItem_Color,
+			this.toolStripMenuItem_AdjustColor});
+			this.toolStripDropDownButton_BackgroundStyle.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton_BackgroundStyle.Image")));
+			this.toolStripDropDownButton_BackgroundStyle.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripDropDownButton_BackgroundStyle.Interpolation = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+			this.toolStripDropDownButton_BackgroundStyle.Name = "toolStripDropDownButton_BackgroundStyle";
+			this.toolStripDropDownButton_BackgroundStyle.Size = new System.Drawing.Size(36, 26);
+			this.toolStripDropDownButton_BackgroundStyle.ToolTipText = "Background Style";
+			// 
+			// toolStripMenuItem_ChessBoard
+			// 
+			this.toolStripMenuItem_ChessBoard.Checked = true;
+			this.toolStripMenuItem_ChessBoard.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.toolStripMenuItem_ChessBoard.Image = global::LF2.Sprite_Sheet_Generator.Properties.Resources.check;
+			this.toolStripMenuItem_ChessBoard.Interpolation = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+			this.toolStripMenuItem_ChessBoard.Name = "toolStripMenuItem_ChessBoard";
+			this.toolStripMenuItem_ChessBoard.Size = new System.Drawing.Size(185, 28);
+			this.toolStripMenuItem_ChessBoard.Text = "Chess &Board";
+			this.toolStripMenuItem_ChessBoard.Click += new System.EventHandler(this.toolStripMenuItem_ChessBoard_Click);
+			// 
+			// toolStripSeparator4
+			// 
+			this.toolStripSeparator4.Name = "toolStripSeparator4";
+			this.toolStripSeparator4.Size = new System.Drawing.Size(182, 6);
+			// 
+			// toolStripMenuItem_Color
+			// 
+			this.toolStripMenuItem_Color.Image = global::LF2.Sprite_Sheet_Generator.Properties.Resources.ColorBlack;
+			this.toolStripMenuItem_Color.Interpolation = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+			this.toolStripMenuItem_Color.Name = "toolStripMenuItem_Color";
+			this.toolStripMenuItem_Color.Size = new System.Drawing.Size(185, 28);
+			this.toolStripMenuItem_Color.Text = "&Color";
+			this.toolStripMenuItem_Color.Click += new System.EventHandler(this.toolStripMenuItem_Color_Click);
+			// 
+			// toolStripMenuItem_AdjustColor
+			// 
+			this.toolStripMenuItem_AdjustColor.Name = "toolStripMenuItem_AdjustColor";
+			this.toolStripMenuItem_AdjustColor.Size = new System.Drawing.Size(185, 28);
+			this.toolStripMenuItem_AdjustColor.Text = "&Adjust Color...";
+			this.toolStripMenuItem_AdjustColor.Click += new System.EventHandler(this.toolStripMenuItem_AdjustColor_Click);
+			// 
+			// toolStripDropDownButton_GuideImage
+			// 
+			this.toolStripDropDownButton_GuideImage.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripDropDownButton_GuideImage.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.toolStripMenuItem_LoadFromFile,
+			this.toolStripMenuItem_CreateEmptyGrid,
+			this.toolStripSeparator1,
+			this.opacityToolStripMenuItem,
+			this.toolStripComboBox_Opacity});
+			this.toolStripDropDownButton_GuideImage.Image = global::LF2.Sprite_Sheet_Generator.Properties.Resources.template_head;
+			this.toolStripDropDownButton_GuideImage.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripDropDownButton_GuideImage.Interpolation = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
+			this.toolStripDropDownButton_GuideImage.Name = "toolStripDropDownButton_GuideImage";
+			this.toolStripDropDownButton_GuideImage.Size = new System.Drawing.Size(36, 26);
+			this.toolStripDropDownButton_GuideImage.ToolTipText = "Adjust Guide Image...";
+			// 
+			// toolStripMenuItem_LoadFromFile
+			// 
+			this.toolStripMenuItem_LoadFromFile.Name = "toolStripMenuItem_LoadFromFile";
+			this.toolStripMenuItem_LoadFromFile.Size = new System.Drawing.Size(222, 26);
+			this.toolStripMenuItem_LoadFromFile.Text = "Load From &File...";
+			this.toolStripMenuItem_LoadFromFile.Click += new System.EventHandler(this.toolStripMenuItem_LoadFromFile_Click);
+			// 
+			// toolStripMenuItem_CreateEmptyGrid
+			// 
+			this.toolStripMenuItem_CreateEmptyGrid.Name = "toolStripMenuItem_CreateEmptyGrid";
+			this.toolStripMenuItem_CreateEmptyGrid.Size = new System.Drawing.Size(222, 26);
+			this.toolStripMenuItem_CreateEmptyGrid.Text = "Create &Empty Grid...";
+			this.toolStripMenuItem_CreateEmptyGrid.Click += new System.EventHandler(this.toolStripMenuItem_CreateEmptyGrid_Click);
+			// 
+			// toolStripSeparator1
+			// 
+			this.toolStripSeparator1.Name = "toolStripSeparator1";
+			this.toolStripSeparator1.Size = new System.Drawing.Size(219, 6);
+			// 
+			// opacityToolStripMenuItem
+			// 
+			this.opacityToolStripMenuItem.Enabled = false;
+			this.opacityToolStripMenuItem.Name = "opacityToolStripMenuItem";
+			this.opacityToolStripMenuItem.Size = new System.Drawing.Size(222, 26);
+			this.opacityToolStripMenuItem.Text = "Opacity:";
+			// 
+			// toolStripComboBox_Opacity
+			// 
+			this.toolStripComboBox_Opacity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.toolStripComboBox_Opacity.Name = "toolStripComboBox_Opacity";
+			this.toolStripComboBox_Opacity.Size = new System.Drawing.Size(121, 28);
+			this.toolStripComboBox_Opacity.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBox_Opacity_SelectedIndexChanged);
 			// 
 			// MainForm
 			// 
@@ -941,15 +928,13 @@
 			this.KeyPreview = true;
 			this.Name = "MainForm";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-			this.Text = "LF2 Sprite Sheet Generator";
+			this.Text = "LF2 Sprite S heet Generator";
 			this.Load += new System.EventHandler(this.MainForm_Load);
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
 			this.statusStrip.ResumeLayout(false);
 			this.statusStrip.PerformLayout();
 			this.toolBox.ResumeLayout(false);
 			this.toolBox.PerformLayout();
-			this.splitContainer.Panel1.ResumeLayout(false);
-			this.splitContainer.Panel1.PerformLayout();
 			this.splitContainer.Panel2.ResumeLayout(false);
 			this.splitContainer.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer)).EndInit();
@@ -1041,7 +1026,6 @@
 		private System.Windows.Forms.ToolStripMenuItem opacityToolStripMenuItem;
 		private System.Windows.Forms.ToolStripComboBox toolStripComboBox_Opacity;
 		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_LoadFromFile;
-		private System.Windows.Forms.Label label7;
 	}
 }
 
